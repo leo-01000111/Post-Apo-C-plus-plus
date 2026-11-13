@@ -20,6 +20,7 @@ HERE = Path(__file__).resolve().parent
 ROOT = HERE.parent
 OUT = ROOT / "START_HERE.html"
 NAME = "Post-Apocalyptic C++"
+SHORT = "Post-Apo C++"
 REPO = "https://github.com/leo-01000111/Post-Apo-C-plus-plus"
 SITE = "https://www.leongorecki.eu/"
 COURSE_REPO = "https://github.com/oKermorgant/ecn_arpro/blob/master/"
@@ -188,8 +189,7 @@ def page_home():
 <div class="hero">
   <div>
     <span class="label">ARPRO &middot; Centrale Nantes &middot; C++17</span>
-    <h1>{NAME}</h1>
-    <p class="lede">An offline C++ kit for the ARPRO exam: cheat-sheets, algorithm templates, my own mistakes and a solved past exam, searchable in one page. Built to work when there is no internet left.</p>
+    <h1>{SHORT}</h1>
     <div class="row">{btn("Search everything", variant="primary", deg=0, size="lg", attrs=" data-open-palette")}
       {btn("Which algorithm", "#algo", "secondary", 0, size="lg")}</div>
   </div>
@@ -402,7 +402,7 @@ def build():
 <header class="top">
   <button class="icon-btn" id="nav-toggle" aria-label="Menu">MENU</button>
   <a class="back" href="{SITE}">&larr; leongorecki.eu</a>
-  <a class="hp-sign hp-sign--location hp-sign--sm" href="#home"><span>{NAME}</span></a>
+  <a class="hp-sign hp-sign--location hp-sign--sm" href="#home"><span>{SHORT}</span></a>
   <button class="search-bar" data-open-palette><span>Search cards, functions, errors</span><kbd>CTRL K</kbd></button>
   <div class="top-r">
     <span class="mini-timer" id="mini-timer"></span>
