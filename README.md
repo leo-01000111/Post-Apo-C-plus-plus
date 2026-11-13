@@ -27,12 +27,12 @@ Run scripts as `bash script.sh`, not `./script.sh` (drives are often mounted wit
 
 | Path | What |
 |---|---|
-| `START_HERE.html` | Self-contained page: 8 sections, Ctrl+K search over every card and function, copy buttons, exam timer, routine checklist. Works offline and online. |
+| `START_HERE.html` | Self-contained page: 11 sections incl. a syntax reference of 150 std functions, typo-tolerant Ctrl+K search, copy buttons, exam timer, routine checklist. Works offline and online. |
 | `1_cheatsheet/` | Page source: my mistakes, C++17 cheat-sheet, STL quick reference, compiler-error decoder, exam routine (Markdown). |
 | `2_snippets/` | Standalone C++17 files that compile warning-free: backtracking, A* (with the course's `ecn::Astar`), BFS/DFS, minimax with alpha-beta, genetic algorithm, containers, random/timing, recursion, CMake template. Lines to change are marked `ADAPT:`. |
 | `3_solved_exams/` | My solution to the sudoku exam. |
 | `tools/` | `setup.sh` (exam PC), `find.sh` (grep everything), `build.sh` (CMake, `Sanitize` mode), `test_snippets.sh`, `fetch_extras.sh`. |
-| `site_src/` | Generator for `START_HERE.html`. |
+| `site_src/` | Generator for `START_HERE.html`; `functions.py` is the syntax reference, `python site_src/test_functions.py` compiles all its examples. |
 | `4_course/`, `5_repo/`, `6_reference/` | Not in the repo (third-party). Created by `fetch_extras.sh`. |
 
 ## Terminal tools

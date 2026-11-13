@@ -26,7 +26,7 @@ SITE = "https://www.leongorecki.eu/"
 COURSE_REPO = "https://github.com/oKermorgant/ecn_arpro/blob/master/"
 
 PAGES = [  # id, label
-    ("home", "Home"), ("mistakes", "My mistakes"), ("routine", "Routine"), ("cpp", "C++"), ("stl", "STL"), ("errors", "Errors & debug"),
+    ("home", "Home"), ("mistakes", "My mistakes"), ("routine", "Routine"), ("cpp", "C++"), ("stl", "STL"), ("functions", "Functions"), ("errors", "Errors & debug"),
     ("algo", "Algorithms"), ("snippets", "Snippets"), ("exams", "Solved exams"), ("course", "Course files"),
 ]
 INDEX = []
@@ -225,7 +225,7 @@ def page_home():
   <div class="hero-minor">
     <section class="card" id="home-timer"><h3 class="card-h"><span>Exam timer</span></h3>
       <div class="card-b">
-        <div class="t-big"><span><span class="label">Elapsed</span><br><b id="t-elapsed">0:00</b></span><span><span class="label">Left</span><br><b id="t-left">2:00</b></span></div>
+        <div class="t-big"><span><span class="label">Elapsed</span><br><b id="t-elapsed">0:00:00</b></span><span><span class="label">Left</span><br><b id="t-left">2:00:00</b></span></div>
         <div class="t-bar"><div class="t-ph p1" title="Read + build">Read</div><div class="t-ph p2" title="TODOs">TODOs</div><div class="t-ph p3" title="Compile + commit">End</div><div id="t-fill"></div></div>
         <div class="row">{btn("Start now", variant="secondary", attrs=' id="t-start"')}{btn("Started 08:00", variant="ghost", attrs=' id="t-08"')}{btn("Reset", variant="ghost", attrs=' id="t-reset"')}</div>
         <p class="small muted" id="t-phase" style="margin:8px 0 0">Not started.</p>
@@ -233,8 +233,8 @@ def page_home():
   </div>
 </div>
 <div class="home-grid">
-  <section class="card" id="home-routine"><h3 class="card-h"><span>Routine</span></h3>
-    <div class="card-b checklist">{checklist}<div class="row" style="margin-top:12px">{btn("Uncheck all", variant="ghost", attrs=' id="chk-reset"')}</div></div></section>
+  <section class="card" id="home-routine"><h3 class="card-h"><span>Routine</span><button type="button" class="head-btn" id="chk-reset">Uncheck all</button></h3>
+    <div class="card-b checklist">{checklist}</div></section>
   <div class="stack">
     {card("home", "Start of exam", md(START_CMDS), cid="home-start")}
   </div>
@@ -253,6 +253,38 @@ def page_stl():
              f'<p class="small muted">* amortised. unordered_* average case.</p>')
     return (card("stl", "Which container", table, cid="stl-complexity", cls="wide")
             + md_cards("stl", ROOT / "1_cheatsheet/stl_quickref.md"))
+
+
+def page_functions():
+    """Pure syntax reference: one card per std function, grouped by scope (data: site_src/functions.py)."""
+    try:
+        from functions import FUNCTIONS
+    except ImportError:
+        return '<p class="lead">site_src/functions.py missing.</p>'
+    groups = {}
+    for f in FUNCTIONS:
+        groups.setdefault(f["scope"], []).append(f)
+    out = []
+    for scope, fns in groups.items():
+        sid = f"fn-{slug(scope)}"
+        cards = []
+        for f in fns:
+            body = highlight(f["sig"], CppLexer(), HtmlFormatter(cssclass="hl sig"))
+            if f.get("ex"):
+                body += hl_cpp(f["ex"])
+            meta = "".join([f'<span class="hp-tag">{html.escape(f["header"])}</span>' if f.get("header") else "",
+                            f'<span class="hp-tag hp-tag--solid">{html.escape(f["cx"])}</span>' if f.get("cx") else ""])
+            if meta:
+                body += f'<div class="meta-row">{meta}</div>'
+            if f.get("note"):
+                body += f'<p class="fn-note">{html.escape(f["note"])}</p>'
+            cid = f"fn-{slug(scope)}-{slug(f['name'])}"
+            cards.append(card("functions", f"<code>{html.escape(f['name'])}</code>", body, cid=cid, cls="fn",
+                              kicker=html.escape(scope)))
+            INDEX[-1].update({"k": "fn", "nm": f["name"], "t": f"{f['name']}  ({scope})",
+                              "x": plain(f["sig"] + " " + f.get("note", "")).lower()[:300]})
+        out.append(f'<h2 class="sec-h" id="{sid}" data-toc-item>{html.escape(scope)}</h2><div class="cards fn-cards">{"".join(cards)}</div>')
+    return '<p class="lead">Syntax only. Type a function name in search: its card comes first.</p>' + "".join(out)
 
 
 def page_algo():
@@ -390,7 +422,7 @@ def inline_fonts(css):
 
 
 def build():
-    bodies = {"home": page_home(), "mistakes": page_mistakes(), "routine": page_routine(), "cpp": md_cards("cpp", ROOT / "1_cheatsheet/cpp_cheatsheet.md"), "stl": page_stl(),
+    bodies = {"home": page_home(), "mistakes": page_mistakes(), "routine": page_routine(), "cpp": md_cards("cpp", ROOT / "1_cheatsheet/cpp_cheatsheet.md"), "stl": page_stl(), "functions": page_functions(),
               "errors": md_cards("errors", ROOT / "1_cheatsheet/compiler_errors.md"), "algo": page_algo(),
               "snippets": page_snippets(), "exams": page_exams(), "course": page_course()}
     for pid, label in PAGES:

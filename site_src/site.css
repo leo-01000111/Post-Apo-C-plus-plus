@@ -227,3 +227,20 @@ ul.bad li::before { content: ""; flex: none; width: 10px; height: 10px; margin-t
 .quick .hp-btn { flex: none; white-space: nowrap; min-height: 32px; padding: 0 var(--space-2); font-size: 13px; }
 .quick .hp-btn svg { width: 13px; height: 13px; }
 .hero > *, .home-grid > * { min-width: 0; }
+/* functions page: compact syntax cards */
+.fn-cards { columns: 340px; }
+.card.fn .card-h { font-size: 15px; padding: var(--space-2) var(--space-3); }
+.card.fn .card-h code { font-size: 14px; background: none; box-shadow: none; padding: 0; font-weight: 600; }
+.card.fn .card-b { padding: var(--space-2) var(--space-3) var(--space-3); }
+.card.fn .hl { margin: var(--space-1) 0; }
+.card.fn .hl.sig pre { font-weight: 600; }
+.fn-note { margin: var(--space-2) 0 0; font-size: 13px; color: var(--hold-ink); }
+/* home: uncheck in the card header, bottom cards share one height, footer closer */
+.head-btn { margin-left: auto; border: 0; background: none; cursor: pointer; padding: 2px 0; color: var(--ink-muted);
+  font: 600 11px var(--font-mono); letter-spacing: .1em; text-transform: uppercase; }
+.head-btn:hover { color: var(--ink); text-decoration: underline; text-decoration-color: var(--signal); text-decoration-thickness: 3px; }
+.home-grid { align-items: stretch; }
+.home-grid .stack, .home-grid .stack > .card, #home-routine { height: 100%; }
+.content { padding-bottom: var(--space-5); }
+.foot { margin-top: var(--space-5); }
+.foot .marking-gap { margin: 0 0 var(--space-2); }

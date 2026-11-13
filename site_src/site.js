@@ -32,6 +32,15 @@
   /* ---------- table of contents per page ---------- */
   $$(".toc").forEach(function (toc) {
     var pid = toc.dataset.toc, page = $("#page-" + pid);
+    var sections = $$("[data-toc-item]", page);     // long pages (Functions) list their groups instead
+    if (sections.length) {
+      sections.forEach(function (s) {
+        var a = document.createElement("a");
+        a.href = "#" + pid + "/" + s.id; a.textContent = s.textContent.trim();
+        toc.appendChild(a);
+      });
+      return;
+    }
     $$(".card[id]", page).forEach(function (c) {
       var h = $(".card-h", c); if (!h) return;
       var t = h.querySelector(".tw") || h.querySelector("span:not(.k):not(.idx):not(.label)");
@@ -129,16 +138,64 @@
 
   /* ---------- command palette ---------- */
   var pal = $("#palette"), inp = $("#pal-in"), res = $("#pal-res"), sel = 0, shown = [];
-  var IDX = (window.INDEX || []).map(function (e) { e.tl = e.t.toLowerCase(); return e; });
+  /* search: exact substring first, then the same without _ : spaces, then typos
+     (1 edit for words up to 5 letters, 2 above). A function's syntax card wins on its own name. */
   function esc(s) { return s.replace(/[&<>"]/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]; }); }
+  function norm(s) { return s.replace(/[_\s:.\-]/g, ""); }
+  function words(s) {
+    var seen = {}, out = [];
+    s.split(/[^a-z0-9_+]+/).forEach(function (w) { if (w.length >= 3 && !seen[w]) { seen[w] = 1; out.push(w); } });
+    return out;
+  }
+  var IDX = (window.INDEX || []).map(function (e) {
+    e.tl = e.t.toLowerCase(); e.tn = norm(e.tl); e.xn = norm(e.x);
+    e.tw = words(e.tl); e.xw = words(e.x).slice(0, 120);
+    if (e.nm) { e.nm = e.nm.toLowerCase(); e.nmn = norm(e.nm); }
+    return e;
+  });
+  function dist(a, b, max) {            // optimal string alignment distance, gives up above max
+    if (Math.abs(a.length - b.length) > max) return max + 1;
+    var prev2 = null, prev = [], cur, i, j;
+    for (j = 0; j <= b.length; j++) prev.push(j);
+    for (i = 1; i <= a.length; i++) {
+      cur = [i]; var best = i;
+      for (j = 1; j <= b.length; j++) {
+        var c = a[i - 1] === b[j - 1] ? 0 : 1;
+        var v = Math.min(prev[j] + 1, cur[j - 1] + 1, prev[j - 1] + c);
+        if (prev2 && i > 1 && j > 1 && a[i - 1] === b[j - 2] && a[i - 2] === b[j - 1]) v = Math.min(v, prev2[j - 2] + 1);
+        cur.push(v); if (v < best) best = v;
+      }
+      if (best > max) return max + 1;
+      prev2 = prev; prev = cur;
+    }
+    return prev[b.length];
+  }
+  function allowed(t) { return t.length <= 3 ? 0 : t.length <= 5 ? 1 : 2; }
+  function fuzzyIn(t, ws) {
+    var m = allowed(t); if (!m) return false;
+    var tn = norm(t);
+    for (var i = 0; i < ws.length; i++) if (dist(t, ws[i], m) <= m || dist(tn, norm(ws[i]), m) <= m) return true;
+    return false;
+  }
   function score(e, toks, q) {
     var s = 0;
     for (var i = 0; i < toks.length; i++) {
-      var t = toks[i], inT = e.tl.indexOf(t), inX = e.x.indexOf(t);
-      if (inT < 0 && inX < 0) return -1;
-      s += inT === 0 ? 30 : inT > 0 ? 18 : 4;
+      var t = toks[i], tn = norm(t), inT = e.tl.indexOf(t);
+      if (inT === 0) s += 30;
+      else if (inT > 0) s += 18;
+      else if (tn && e.tn.indexOf(tn) >= 0) s += 16;
+      else if (e.x.indexOf(t) >= 0) s += 4;
+      else if (tn && e.xn.indexOf(tn) >= 0) s += 3;
+      else if (fuzzyIn(t, e.tw)) s += 12;
+      else if (fuzzyIn(t, e.xw)) s += 2;
+      else return -1;
     }
     if (e.tl.indexOf(q) >= 0) s += 25;
+    if (e.nm) {                          // syntax card: exact or near-exact name beats everything
+      var qn = norm(q);
+      if (e.nm === q || e.nmn === qn) s += 150;
+      else if (qn.length > 3 && dist(qn, e.nmn, allowed(qn)) <= allowed(qn)) s += 90;
+    }
     if (e.k === "page") s += 5;
     if (e.k === "code") s += 2;
     return s - e.tl.length / 40;
@@ -231,19 +288,22 @@
 
   /* ---------- exam timer (2 h) ---------- */
   var DUR = 120 * 60 * 1000;
-  function fmt(ms) { ms = Math.max(0, ms); var m = Math.floor(ms / 60000), h = Math.floor(m / 60); return h + ":" + ("0" + (m % 60)).slice(-2); }
+  function fmt(ms, up) {                 // up: round up (time left), so elapsed + left = 2:00:00
+    var t = (up ? Math.ceil : Math.floor)(Math.max(0, ms) / 1000), h = Math.floor(t / 3600), m = Math.floor(t / 60) % 60, s = t % 60;
+    return h + ":" + ("0" + m).slice(-2) + ":" + ("0" + s).slice(-2);
+  }
   function lampHtml(state, word) { return '<span class="hp-lamp hp-lamp--' + state + '"><i aria-hidden="true"></i><span>' + word + "</span></span>"; }
   function tick() {
     var st = +store.get("start"), mini = $("#mini-timer");
-    if (!st) { $("#t-elapsed").textContent = "0:00"; $("#t-left").textContent = "2:00"; $("#t-fill").style.width = "0";
+    if (!st) { $("#t-elapsed").textContent = "0:00:00"; $("#t-left").textContent = "2:00:00"; $("#t-fill").style.width = "0";
       $("#t-phase").textContent = "Not started."; mini.innerHTML = ""; return; }
     var el = Date.now() - st, left = DUR - el, min = el / 60000, frac = Math.min(1, Math.max(0, el / DUR));
-    $("#t-elapsed").textContent = fmt(el); $("#t-left").textContent = fmt(left);
+    $("#t-elapsed").textContent = fmt(el); $("#t-left").textContent = fmt(left, true);
     $("#t-fill").style.width = (frac * 100) + "%";
     $("#t-phase").textContent = min < 10 ? "Phase 1: read the whole subject, build the untouched project, git init."
       : min < 110 ? "Phase 2: TODOs in order, commit after each one that works."
       : left > 0 ? "Phase 3: make sure it compiles, comment out broken code, final commit." : "Time is up.";
-    mini.innerHTML = lampHtml(left <= 0 ? "hold" : min >= 100 ? "caution" : "go", fmt(left) + " left");
+    mini.innerHTML = lampHtml(left <= 0 ? "hold" : min >= 100 ? "caution" : "go", fmt(left, true) + " left");
   }
   $("#t-start").addEventListener("click", function () { store.set("start", Date.now()); tick(); });
   $("#t-08").addEventListener("click", function () { var d = new Date(); d.setHours(8, 0, 0, 0); store.set("start", +d); tick(); });
