@@ -1,5 +1,4 @@
-"""Hand-written content for the Algorithms page and the container-complexity card.
-Kept separate from the generator so it is easy to edit."""
+"""Content of the Algorithms page and the container-complexity card."""
 
 DECISION = [
     # (question, answer, algorithm id, why)
@@ -23,7 +22,7 @@ DECISION = [
      "Fitness, selection, crossover that keeps a valid permutation, mutation."),
     ("Same sub-problem computed again and again (counting ways, Fibonacci)?",
      "Recursion + memo", "recursion",
-     "Cache results in a map/vector keyed by the arguments."),
+     "Cache results keyed by the arguments."),
 ]
 
 ALGOS = [
@@ -43,7 +42,7 @@ ALGOS = [
         "bugs": ["return false INSIDE the loop (only first candidate tried)",
                  "cancel() not restoring what set() pruned",
                  "comparator letting already-filled cells win"],
-        "cost": "Exponential worst case; the heuristic is what makes it fast.",
+        "cost": "Exponential worst case; the heuristic decides the speed.",
     },
     {
         "id": "astar", "name": "A* search", "snippet": "astar",
@@ -66,7 +65,7 @@ return no path""",
         "bugs": ["neighbours going through walls / out of the grid",
                  "h overestimating -> path not shortest",
                  "operator== comparing the wrong fields"],
-        "cost": "With a good h, explores far fewer nodes than BFS.",
+        "cost": "Explores far fewer nodes than BFS with a good h.",
     },
     {
         "id": "bfs", "name": "BFS / DFS", "snippet": "bfs_dfs",
@@ -111,7 +110,7 @@ return no path""",
     },
     {
         "id": "ga", "name": "Genetic algorithm", "snippet": "genetic_algorithm",
-        "exam": "Likely: TSP (open project + live example)",
+        "exam": "Likely: TSP",
         "pseudo": """pop = N random permutations
 repeat G generations:
     sort pop by fitness;  keep E elites
@@ -147,18 +146,7 @@ return best individual""",
     },
 ]
 
-PATTERNS = [
-    ("What his exams look like",
-     ["A puzzle or game + one classic algorithm, given as pseudocode in the PDF.",
-      "Most classes are provided: you fill in a few methods marked TODO.",
-      "Grading = it compiles, then each TODO works, in the subject's order."]),
-    ("C++ skills they test",
-     ["Classes, member vs accessor (digit_ vs digit()), static functions.",
-      "Pointers to other objects (neighbours) and -> .",
-      "STL: vector, array, min_element with a comparator, find / erase.",
-      "Inheriting from a given class (Position : ecn::Point), operator==.",
-      "Reading existing code and reusing it (templates like ecn::Astar)."]),
-]
+PATTERNS = []
 
 # container complexity: (container, access, push_back/insert end, insert middle/any, find, erase, note)
 CONTAINERS = [

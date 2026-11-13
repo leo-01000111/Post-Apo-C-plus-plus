@@ -34,7 +34,6 @@ double timeMs(F &&f)
     return std::chrono::duration<double, std::milli>(t1 - t0).count();
 }
 
-// Something to measure.
 long long heavySum(int n)
 {
     long long s = 0;
@@ -46,7 +45,7 @@ long long heavySum(int n)
 int main()
 {
     // --- seeding
-    std::mt19937 rng(42);                       // fixed seed
+    std::mt19937 rng(42);
     std::random_device rd;                      // hardware entropy (deterministic on some
     std::mt19937 rngRandom(rd());               // old MinGW builds: fine for exams)
     (void)rngRandom;
@@ -87,7 +86,7 @@ int main()
 
     // --- shuffle a vector (never use random_shuffle: removed in C++17)
     std::vector<int> v(10);
-    std::iota(v.begin(), v.end(), 0);                   // 0..9
+    std::iota(v.begin(), v.end(), 0);
     std::shuffle(v.begin(), v.end(), rng);
     std::cout << "shuffled:";
     for(int x : v)

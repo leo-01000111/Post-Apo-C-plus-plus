@@ -1,6 +1,6 @@
 # Exam routine
 
-Exam: Mon 16 Nov 2026, 08:00-10:00, lab PCs (Linux). Offline. Thumb drive allowed.
+Mon 16 Nov 2026, 08:00-10:00, Linux lab PCs, offline, thumb drive allowed.
 
 ## Exam routine
 
@@ -8,30 +8,30 @@ Exam: Mon 16 Nov 2026, 08:00-10:00, lab PCs (Linux). Offline. Thumb drive allowe
 2. Build the untouched project before changing anything.
 3. `git init` + commit after each method that works.
 4. Do the TODOs in the subject's order.
-5. Never hand in code that doesn't compile: comment out the broken part.
+5. Never hand in code that does not compile: comment out the broken part.
 
 ## Time plan (2 h)
 
 | Time | What |
 |------|------|
-| 0:00 - 0:10 | Read the whole subject PDF + the code skeleton. Build the untouched project. `git init`. Note the TODOs in order. |
-| 0:10 - 1:45 | Do the TODOs one by one, in the subject's order. Commit after each one that works. |
-| 1:45 - 2:00 | Stop adding features. Clean build from scratch, make sure it compiles, run once, commit. Comment out anything broken. |
+| 0:00 - 0:10 | Read the subject PDF and code skeleton. Build the untouched project. `git init`. Note the TODOs in order. |
+| 0:10 - 1:45 | Do the TODOs in the subject's order. Commit after each one that works. |
+| 1:45 - 2:00 | No new features. Clean build, run once, commit. Comment out anything broken. |
 
-Rule: the last 10 minutes are for "it compiles and is committed", not for new code.
+The last 10 minutes are for "it compiles and is committed", not new code.
 
 ## Quick git
 
 ```bash
 cd <project dir>
-git init && git add -A && git commit -qm start     # once, at the start (after the first build works)
+git init && git add -A && git commit -qm start     # once, after the first build works
 git add -A && git commit -qm "step N works"        # after each working method
-git log --oneline                                  # check
+git log --oneline
 git stash                                          # park a broken attempt (git stash pop to restore)
 git checkout -- file.cpp                           # throw away edits to one file (careful)
 ```
 
-If git complains about identity:
+Identity error:
 ```bash
 git config user.email "me@x" && git config user.name "me"
 ```
@@ -48,19 +48,19 @@ New .cpp file added? Re-run `cmake ..` (and check it is in add_executable / the 
 
 ## Working rules
 
-- **Stuck for more than 10 minutes on one TODO: move to the next one.** Leave a `// TODO unfinished` comment, make sure it compiles, come back at the end.
-- **The subject PDF contains the algorithm pseudocode: translate it line by line.** Same variable names, same order, same loop structure. Do not "improve" it. Each pseudocode line becomes one C++ line (or a few).
-- Read the compiler error from the FIRST one only (later ones are often consequences). See `compiler_errors.md`.
+- Stuck for more than 10 minutes on a TODO: move on. Leave a `// TODO unfinished` comment, keep it compiling, come back at the end.
+- The subject PDF has the algorithm pseudocode: translate it line by line, same variable names, order and loop structure. Do not "improve" it.
+- Read only the FIRST compiler error (later ones are often consequences). See `compiler_errors.md`.
 - Check provided helpers before writing your own (e.g. `eraseCandidate`, `print`, `distToPrevious`).
-- Read the comments in the provided headers: they state what each method must do.
-- Print intermediate values (`std::cout`) rather than guessing; remove noisy prints at the end.
+- The comments in the provided headers state what each method must do.
+- Print intermediate values (`std::cout`) instead of guessing; remove noisy prints at the end.
 - Re-read `my_mistakes.md` once before starting and once at the 1 h mark.
-- Use `find.sh <word>` (greps the whole stick) when you need a snippet: `2_snippets/` has backtracking, A* Node, minimax, GA, CMake.
+- `find.sh <word>` greps the whole stick; `2_snippets/` has backtracking, A* Node, minimax, GA, CMake.
 
 ## Before handing in
 
 - [ ] `rm -rf build && mkdir build && cd build && cmake .. && make` succeeds with no errors.
-- [ ] Program runs and gives a plausible result on the given input.
+- [ ] Program runs and gives a plausible result.
 - [ ] Broken/unfinished code is commented out, not left half-written.
 - [ ] `git add -A && git commit -qm final`.
 - [ ] No debug prints flooding the output; no `waitKey(0)` surprises left unexplained.

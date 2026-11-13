@@ -12,7 +12,7 @@ Compile: `g++ -std=c++17 -Wall -Wextra -g main.cpp -o main`
 class Cell {
 public:
     Cell(int x, int y);
-    int digit() const;    // declaration only
+    int digit() const;
 private:
     int digit_ = 0;
 };
@@ -35,11 +35,11 @@ int Cell::digit() const { return digit_; }
 ```cpp
 class Point {
 public:
-    Point() = default;                          // default ctor
+    Point() = default;
     Point(int x, int y) : x_(x), y_(y) {}       // init list (members init in DECLARATION order)
     explicit Point(int v) : x_(v), y_(v) {}     // no implicit int -> Point
-    Point(const Point&) = default;              // copy ctor
-    Point& operator=(const Point&) = default;   // copy assign
+    Point(const Point&) = default;
+    Point& operator=(const Point&) = default;
     virtual ~Point() = default;                 // virtual dtor if used polymorphically
 
     int x() const { return x_; }                // const method: cannot modify members
@@ -51,8 +51,8 @@ private:
     static inline int count_ = 0;               // C++17: static member defined in class
 };
 ```
-- `struct` = `class` with everything public by default.
-- Members: `obj.x()` for objects/references, `ptr->x()` for pointers (`ptr->x()` is `(*ptr).x()`).
+- `struct` is `class` with public default.
+- `obj.x()` for objects/references, `ptr->x()` (= `(*ptr).x()`) for pointers.
 - `private` is per CLASS, not per object: a `Cell` can touch another `Cell`'s privates.
 - Initialization list is required for const members, reference members and base classes without default ctor.
 - Delete copying: `Cell(const Cell&) = delete;` -> then use `auto&` / pointers, never `auto`.
@@ -70,7 +70,7 @@ public:
 };
 class Circle : public Shape {
 public:
-    Circle(double r) : Shape(), r_(r) {}        // call base ctor in init list
+    Circle(double r) : Shape(), r_(r) {}        // base ctor in init list
     double area() const override { return 3.14159 * r_ * r_; }   // override: compiler checks signature
 private:
     double r_;
@@ -78,8 +78,8 @@ private:
 Shape* s = new Circle(2);   s->area();  delete s;      // virtual dispatch through pointer/reference
 std::vector<std::unique_ptr<Shape>> v;  v.push_back(std::make_unique<Circle>(1.0));
 ```
-- Polymorphism only works through pointers/references, not by value (slicing).
-- `class Node : public ecn::Point` : Node gets Point's public members (`x`, `y`).
+- Polymorphism only through pointers/references, not by value (slicing).
+- `class Node : public ecn::Point`: Node gets Point's public members (`x`, `y`).
 - Call the base version: `Shape::print();`
 - `protected`: visible to derived classes, hidden from outside.
 - `final` stops further overriding.
@@ -89,7 +89,7 @@ std::vector<std::unique_ptr<Shape>> v;  v.push_back(std::make_unique<Circle>(1.0
 ```cpp
 int a = 5;
 int& r = a;        // reference: alias, must be initialized, cannot be reseated
-int* p = &a;       // pointer: holds an address; *p is the value; p can be nullptr
+int* p = &a;       // pointer: *p is the value; can be nullptr
 const int* cp;     // pointer to const int (cannot change *cp)
 int* const pc = &a;// const pointer (cannot change pc)
 void f(int& out);        // modifies caller's variable
@@ -99,7 +99,7 @@ void h(Big b);           // copy
 ```cpp
 #include <memory>
 auto u = std::make_unique<Cell>(1, 2);   // sole owner, auto-deleted, not copyable
-u->digit();   (*u).digit();   u.get();   // raw pointer
+u->digit();   (*u).digit();   u.get();   // u.get() = raw pointer
 auto u2 = std::move(u);                  // transfer ownership (u is now null)
 auto s = std::make_shared<Cell>(1, 2);   // shared ownership, ref-counted
 auto s2 = s;  s.use_count();             // 2
@@ -113,10 +113,10 @@ auto s2 = s;  s.use_count();             // 2
 
 ```cpp
 int Cell::digit() const;                   // const method: callable on const objects
-const std::vector<int>& cands() const;     // returns read-only view, no copy
+const std::vector<int>& cands() const;     // read-only view, no copy
 for (const auto& c : cells) c.digit();     // const object => only const methods allowed
 ```
-Error "passing const X as this discards qualifiers" = you called a non-const method on a const object. Fix: mark the method `const` (if it does not modify) or drop `const` from the variable.
+"passing const X as this discards qualifiers" = non-const method called on a const object. Mark the method `const` (if it does not modify) or drop `const` from the variable.
 
 ## Operator overloading
 
@@ -148,7 +148,7 @@ auto allRef = [&](int x) { k += x; };           // everything by reference
 auto allVal = [=](int x) { return x + k; };     // everything by copy (read-only unless mutable)
 auto mut    = [k](int x) mutable { k += x; return k; };
 // inside a member function:
-auto m = [this](int x) { return x + member_; }; // captures this pointer
+auto m = [this](int x) { return x + member_; }; // captures the this pointer
 auto cmp = [](const Cell& a, const Cell& b) { return a.candidates().size() < b.candidates().size(); };
 std::sort(v.begin(), v.end(), [](int a, int b) { return a > b; });
 auto r = [](int a) -> double { return a / 2.0; };  // explicit return type
@@ -196,7 +196,7 @@ private:
 };
 Stack<int> s;  s.push(1);
 ```
-Generic A* style: the algorithm is `template <class Node> ... AStar(Node start, Node goal)` and calls `node.neighboors()`, `node.distToPrevious()`, `node == goal`, `node.h(goal)`, `node.print(next)`. Your Node must provide exactly those.
+Generic A*: `template <class Node> ... AStar(Node start, Node goal)` calls `node.neighboors()`, `node.distToPrevious()`, `node == goal`, `node.h(goal)`, `node.print(next)`. Node must provide exactly those.
 
 ```cpp
 // requires a member `std::vector<Node> neighboors() const`
@@ -215,14 +215,14 @@ op = std::plus<int>();                 // any callable
 int apply(std::function<int(int)> f, int x) { return f(x); }
 std::function<double(const Node&)> heuristic;   // stored callback
 ```
-Slower than a template parameter / `auto`, but can be stored in members and containers.
+Slower than a template parameter / `auto`, but storable in members and containers.
 
 ## enums
 
 ```cpp
 enum class Dir { Up, Down, Left, Right };   // scoped: Dir::Up, no implicit int
 Dir d = Dir::Left;
-int i = static_cast<int>(d);                // explicit conversion needed
+int i = static_cast<int>(d);
 Dir e = static_cast<Dir>(2);
 switch (d) { case Dir::Up: break; default: break; }
 enum Color { Red, Green };                  // old style: Red is an int, pollutes scope
@@ -231,13 +231,13 @@ enum Color { Red, Green };                  // old style: Red is an int, pollute
 ## Casting
 
 ```cpp
-double d = static_cast<double>(a) / b;      // use this one
+double d = static_cast<double>(a) / b;
 int i = static_cast<int>(3.9);              // 3 (truncates)
 size_t n = static_cast<size_t>(i);
 // reinterpret_cast (bit reinterpretation), const_cast (remove const), dynamic_cast (checked downcast, needs virtual):
 if (auto* c = dynamic_cast<Circle*>(shapePtr)) { /* it is a Circle */ }
 ```
-Avoid C casts `(int)x` in exam code, they work but hide bugs.
+Avoid C casts `(int)x`: they hide bugs.
 
 ## Arithmetic pitfalls
 

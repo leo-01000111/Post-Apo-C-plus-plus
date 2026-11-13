@@ -30,10 +30,8 @@ struct Task
     std::string name;
 };
 
-// ---------------------------------------------------------------------------
 // 1. priority_queue is a MAX-heap: top() = largest according to "less".
 //    For a MIN-heap the comparator must say "a is worse than b" when a > b.
-// ---------------------------------------------------------------------------
 // 1a. integers: std::greater
 using MinHeapInt = std::priority_queue<int, std::vector<int>, std::greater<int>>;
 
@@ -82,9 +80,7 @@ void demoPriorityQueue()
     std::cout << "smallest f: " << fq.top().first << " id " << fq.top().second << "\n";
 }
 
-// ---------------------------------------------------------------------------
 // 2. Custom keys
-// ---------------------------------------------------------------------------
 // 2a. std::map works with pair<int,int> directly (pair has operator<). O(log n).
 // 2b. unordered_map needs a hash. Hash for pair<int,int>:
 struct PairHash
@@ -139,10 +135,8 @@ void demoMaps()
               << ", again new? " << seen.insert("abc").second << "\n";
 }
 
-// ---------------------------------------------------------------------------
 // 3. set of structs (sorted, unique). Elements are compared with operator<
 //    (two items are "equal" if neither is smaller). ADAPT: the fields in tie().
-// ---------------------------------------------------------------------------
 struct Person
 {
     std::string name;
@@ -166,10 +160,8 @@ void demoSet()
     std::cout << "first aged >= 30: " << it->name << "\n";
 }
 
-// ---------------------------------------------------------------------------
 // 4. erase-remove idiom. remove_if only MOVES the kept items to the front and
 //    returns the new end; erase then shrinks the vector.
-// ---------------------------------------------------------------------------
 void demoEraseRemove()
 {
     std::vector<int> v{1, 2, 3, 4, 5, 6, 7, 8};
@@ -180,7 +172,7 @@ void demoEraseRemove()
     std::cout << "\n";
 
     std::vector<int> w{3, 1, 3, 2, 3};
-    w.erase(std::remove(w.begin(), w.end(), 3), w.end());       // remove by value
+    w.erase(std::remove(w.begin(), w.end(), 3), w.end());
     std::cout << "without 3s: " << w.size() << " items\n";
 
     std::vector<int> d{1, 1, 2, 2, 2, 3, 1};
@@ -200,9 +192,7 @@ void demoEraseRemove()
     std::cout << "manual erase left " << e.size() << " items\n";
 }
 
-// ---------------------------------------------------------------------------
 // 5. Sorting by several keys
-// ---------------------------------------------------------------------------
 void demoSort()
 {
     std::vector<Task> t{{3, "c"}, {1, "z"}, {3, "a"}, {1, "b"}};
@@ -230,10 +220,8 @@ void demoSort()
     std::stable_sort(t.begin(), t.end(), [](const Task &a, const Task &b) { return a.cost < b.cost; });
 }
 
-// ---------------------------------------------------------------------------
 // 6. min_element with a comparator. Returns an ITERATOR (end() if empty!).
 //    comparator(a, b) == "a is smaller than b". Sudoku: pick cell with fewest candidates.
-// ---------------------------------------------------------------------------
 struct Cell
 {
     int id;
@@ -265,9 +253,7 @@ void demoMinElement()
     std::cout << "undecided cells: " << todo.size() << "\n";
 }
 
-// ---------------------------------------------------------------------------
 // 7. Misc one-liners
-// ---------------------------------------------------------------------------
 void demoMisc()
 {
     std::vector<int> v{4, 8, 15, 16, 23, 42};

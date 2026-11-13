@@ -188,13 +188,12 @@ def page_home():
     return f"""
 <div class="hero">
   <div>
-    <span class="label">ARPRO &middot; Centrale Nantes &middot; C++17</span>
     <h1>{SHORT}</h1>
     <div class="row">{btn("Search everything", variant="primary", deg=0, size="lg", attrs=" data-open-palette")}
       {btn("Which algorithm", "#algo", "secondary", 0, size="lg")}</div>
   </div>
   <div class="hero-minor">
-    <section class="card" id="home-timer"><h3 class="card-h"><span class="k">2 h</span><span>Exam timer</span></h3>
+    <section class="card" id="home-timer"><h3 class="card-h"><span>Exam timer</span></h3>
       <div class="card-b">
         <div class="t-big"><span><span class="label">Elapsed</span><br><b id="t-elapsed">0:00</b></span><span><span class="label">Left</span><br><b id="t-left">2:00</b></span></div>
         <div class="t-bar"><div class="t-ph p1" title="Read + build">Read</div><div class="t-ph p2" title="TODOs">TODOs</div><div class="t-ph p3" title="Compile + commit">End</div><div id="t-fill"></div></div>
@@ -204,12 +203,12 @@ def page_home():
   </div>
 </div>
 <div class="home-grid">
-  <section class="card" id="home-routine"><h3 class="card-h"><span class="k">Checklist</span><span>Routine</span></h3>
+  <section class="card" id="home-routine"><h3 class="card-h"><span>Routine</span></h3>
     <div class="card-b checklist">{checklist}<div class="row" style="margin-top:12px">{btn("Uncheck all", variant="ghost", attrs=' id="chk-reset"')}</div></div></section>
   <div class="stack">
-    <section class="card" id="home-links"><h3 class="card-h"><span class="k">Open</span><span>Quick open</span></h3>
+    <section class="card" id="home-links"><h3 class="card-h"><span>Quick open</span></h3>
       <div class="card-b"><div class="links">{links}</div>
-      <p class="small muted local-note" data-online-note hidden>Online: exam subjects open from the course repo and cppreference from the web. Slides live on the drive only.</p></div></section>
+      <p class="small muted local-note" data-online-note hidden>Slides are on the drive only.</p></div></section>
   </div>
 </div>
 {marking("holding", "Hold short · read first")}
@@ -228,8 +227,8 @@ def page_stl():
                    + f"<td class='muted'>{note}</td></tr>" for c, *r, note in CONTAINERS)
     table = (f'<table class="cx"><thead><tr><th>Container</th><th>Access [i]</th><th>Add at end</th><th>Insert middle</th>'
              f'<th>Find</th><th>Erase</th><th>Note</th></tr></thead><tbody>{rows}</tbody></table>'
-             f'<p class="small muted">* amortised. unordered_* are average case. Green lamp = cheap, yellow = fine, red = careful inside loops.</p>')
-    return (card("stl", "Which container", table, cid="stl-complexity", cls="wide", kicker="Complexity")
+             f'<p class="small muted">* amortised. unordered_* average case.</p>')
+    return (card("stl", "Which container", table, cid="stl-complexity", cls="wide")
             + md_cards("stl", ROOT / "1_cheatsheet/stl_quickref.md"))
 
 
@@ -239,10 +238,11 @@ def page_algo():
         f'<a class="hp-sign hp-sign--direction hp-sign--sm" href="#algo/algo-{aid}"><span>{html.escape(a)}</span>{arrow(0)}</a>'
         f'<span class="why">{html.escape(w)}</span></div>' for q, a, aid, w in DECISION)
     add_index("algo", "algo-decide", "Which algorithm (decision guide)", " ".join(q + " " + a for q, a, _, _ in DECISION))
-    out = [card("algo", "Which algorithm", f'<div class="decide">{rows}</div>', cid="algo-decide", cls="wide", kicker="Decide")]
-    out.append('<div class="cards two">' + "".join(
-        card("algo", t, "<ul>" + "".join(f"<li>{html.escape(x)}</li>" for x in xs) + "</ul>", kicker="Pattern")
-        for t, xs in PATTERNS) + "</div>")
+    out = [card("algo", "Which algorithm", f'<div class="decide">{rows}</div>', cid="algo-decide", cls="wide")]
+    if PATTERNS:
+        out.append('<div class="cards two">' + "".join(
+            card("algo", t, "<ul>" + "".join(f"<li>{html.escape(x)}</li>" for x in xs) + "</ul>")
+            for t, xs in PATTERNS) + "</div>")
     for n, a in enumerate(ALGOS, 1):
         pseudo = highlight(a["pseudo"], TextLexer(), HtmlFormatter(cssclass="hl pseudo"))
         pseudo = re.sub(r"(//[^\n<]*)", r'<span class="c1">\1</span>', pseudo)
@@ -304,19 +304,18 @@ def page_snippets():
         m = re.match(r"- `([^`]+)` - (.*)", ln)
         if m:
             descs[m.group(1)] = md(m.group(2))[3:-4]
-    out = ['<p class="lead">Every file compiles on its own: <code>g++ -std=c++17 -Wall -Wextra -O2 f.cpp</code>. '
-           'Click a function to jump to it. Highlighted lines are marked <code>ADAPT:</code>, the parts you change.</p>']
+    out = ['<p class="lead"><code>g++ -std=c++17 -Wall -Wextra -O2 f.cpp</code> &middot; highlighted lines: <code>ADAPT:</code></p>']
     for f in NICE:
         out.append(snippet_block("snippets", f"snip-{f[:-4]}", NICE[f], descs.get(f, ""), ROOT / "2_snippets" / f))
     cm = (ROOT / "2_snippets/CMakeLists_template.txt").read_text(encoding="utf-8")
     out.append(card("snippets", "CMakeLists template", highlight(cm, CMakeLexer(), HtmlFormatter(cssclass="hl")),
-                    cid="snip-cmake", cls="wide", kicker="Build"))
+                    cid="snip-cmake", cls="wide"))
     return "".join(out)
 
 
 def page_exams():
     base = ROOT / "3_solved_exams/sudoku"
-    intro = ('<p class="lead">My own solution, written and debugged during practice. Subject: '
+    intro = ('<p class="lead">Subject: '
              f'<a href="4_course/subjects/sudoku_exam.pdf" data-online="{COURSE_REPO}sudoku/subject/sudoku.pdf">sudoku_exam.pdf</a>.</p>')
     return intro + "".join([
         snippet_block("exams", "ex-sudoku-cell", "Sudoku — Cell: prune, restore, set, cancel",
@@ -324,7 +323,7 @@ def page_exams():
                       base / "src/cell.cpp"),
         snippet_block("exams", "ex-sudoku-grid", "Sudoku — Grid: constructor, backtracking, bestNextCell",
                       "Backtracking loop and the most-constrained-cell comparator.", base / "src/grid.cpp"),
-        snippet_block("exams", "ex-sudoku-cellh", "Sudoku — cell.h (given)", "The provided class declaration.",
+        snippet_block("exams", "ex-sudoku-cellh", "Sudoku — cell.h (given)", "",
                       base / "include/sudoku/cell.h")])
 
 
@@ -344,7 +343,7 @@ def page_course():
                        ("6_reference/cppreference/reference/en/cpp/algorithm.html", "Algorithms", "https://en.cppreference.com/w/cpp/algorithm"),
                        ("5_repo/ecn_arpro", "Course repo", "https://github.com/oKermorgant/ecn_arpro")]),
     ]
-    cs = "".join(card("course", g, '<div class="links">' + "".join(flink(h, t, o) for h, t, o in items) + "</div>", kicker="Files")
+    cs = "".join(card("course", g, '<div class="links">' + "".join(flink(h, t, o) for h, t, o in items) + "</div>")
                  for g, items in groups)
     tip = card("course", "Terminal tools", md(textwrap.dedent("""\
         ```bash
@@ -352,11 +351,10 @@ def page_course():
         bash tools/find.sh min_element        # search all text, code and slides
         bash tools/find.sh -C 3 "erase.*remove"
         bash tools/build.sh path/to/project Sanitize   # crash -> exact line
-        ```""")), kicker="Shell")
+        ```""")))
     note = card("course", "Missing files", md(
-        "Course material is not in the public repository. Run `bash tools/fetch_extras.sh` once with internet: "
-        "it clones the course repo, copies the exam subjects, downloads offline cppreference and extracts searchable text. "
-        "Slides come from Hippocampus: drop the PDFs into `4_course/slides/` and run the script again."), kicker="Setup")
+        "`bash tools/fetch_extras.sh` (needs internet, once): course repo, exam subjects, offline cppreference, searchable text. "
+        "Slides: from Hippocampus into `4_course/slides/`, then run it again."))
     return f'<div class="cards">{cs}{tip}{note}</div>'
 
 
@@ -381,7 +379,7 @@ def build():
         f'<main class="page" id="page-{pid}" data-page="{pid}" hidden>'
         + ("" if pid == "home" else f'<div class="page-head"><span class="label">Page {n:02d} / {len(PAGES):02d}</span><h1>{label}</h1></div>')
         + bodies[pid] + "</main>" for n, (pid, label) in enumerate(PAGES, 1))
-    foot = (f'<footer class="foot">{marking("centerline")}<p class="small muted">{NAME} &middot; made by Leon Górecki for the ARPRO exam at Centrale Nantes. '
+    foot = (f'<footer class="foot">{marking("centerline")}<p class="small muted">{NAME} &middot; Leon Górecki &middot; '
             f'<a href="{SITE}">leongorecki.eu</a></p></footer>')
 
     tokens = inline_fonts((HERE / "hp/tokens.css").read_text(encoding="utf-8"))
@@ -421,7 +419,6 @@ def build():
 <div class="palette" id="helpbox" hidden><div class="pal-box help">
   <h3>Keyboard</h3>
   <p><kbd>CTRL K</kbd> or <kbd>/</kbd> search &middot; <kbd>1</kbd>&ndash;<kbd>8</kbd> pages &middot; <kbd>T</kbd> day or night &middot; <kbd>+</kbd> <kbd>&minus;</kbd> text size &middot; <kbd>ESC</kbd> close</p>
-  <p class="small muted">Every code block has a copy button at its top right. LINK on a card gives a direct link to it.</p>
 </div></div>
 <div class="toast" id="toast"></div>
 <script>window.INDEX={idx};</script>

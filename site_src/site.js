@@ -163,7 +163,7 @@
       : IDX.map(function (e) { return [score(e, toks, q), e]; }).filter(function (p) { return p[0] >= 0; })
           .sort(function (a, b) { return b[0] - a[0]; }).slice(0, 40).map(function (p) { return p[1]; });
     sel = 0;
-    if (!shown.length) { res.innerHTML = '<div class="pal-empty">No results for <b>' + esc(inp.value) + "</b>. Try fewer or shorter words, or <code>bash tools/find.sh</code> in a terminal.</div>"; return; }
+    if (!shown.length) { res.innerHTML = '<div class="pal-empty">No results for <b>' + esc(inp.value) + "</b>. Terminal: <code>bash tools/find.sh</code></div>"; return; }
     res.innerHTML = shown.map(function (e, i) {
       return '<div class="pal-it' + (i === 0 ? " on" : "") + '" data-i="' + i + '"><span class="hp-tag">' + esc(PAGE_LABEL[e.p] || e.p) + "</span>" +
         '<div style="min-width:0"><div class="tt">' + mark(e.t, toks) + "</div>" +

@@ -16,9 +16,7 @@
 #include <iostream>
 #include <vector>
 
-// ---------------------------------------------------------------------------
 // Part 1: N-queens as a concrete problem. One queen per row, we choose a column.
-// ---------------------------------------------------------------------------
 class Queens
 {
 public:
@@ -31,7 +29,6 @@ public:
     int size() const { return n_; }
     int columnOf(int row) const { return col_[static_cast<size_t>(row)]; }
 
-    // Is it legal to put a queen at (row, c) given the queens already set?
     bool canSet(int row, int c) const
     {
         return !usedCol_[static_cast<size_t>(c)]
@@ -39,7 +36,6 @@ public:
             && !usedDiag2_[static_cast<size_t>(row - c + n_)];
     }
 
-    // set: apply the decision and update all the bookkeeping
     void set(int row, int c)
     {
         col_[static_cast<size_t>(row)] = c;
@@ -48,7 +44,6 @@ public:
         usedDiag2_[static_cast<size_t>(row - c + n_)] = true;
     }
 
-    // cancel: exact inverse of set
     void cancel(int row, int c)
     {
         col_[static_cast<size_t>(row)] = -1;
@@ -73,7 +68,7 @@ private:
     std::vector<bool> usedCol_, usedDiag1_, usedDiag2_;
 };
 
-// First solution only: returns true as soon as one complete assignment is found.
+// First solution only.
 // ADAPT: replace Queens by your state type, 'row' by your decision point and
 // the loop over columns by the loop over candidate values.
 bool solveFirst(Queens &q, int row)
@@ -88,7 +83,7 @@ bool solveFirst(Queens &q, int row)
         q.set(row, c);
         if(solveFirst(q, row + 1))
             return true;           // keep the state as is: it IS the solution
-        q.cancel(row, c);          // undo and try the next candidate
+        q.cancel(row, c);
     }
     return false;
 }
@@ -110,14 +105,12 @@ int countAll(Queens &q, int row)
     return total;
 }
 
-// ---------------------------------------------------------------------------
 // Part 2: generic skeleton (template) to copy. State must provide:
 //   bool complete() const;
 //   bool pickDecision(Decision &d) const;           // false if nothing left
 //   std::vector<Value> candidates(const Decision&) const;
 //   void set(const Decision&, const Value&);
 //   void cancel(const Decision&, const Value&);
-// ---------------------------------------------------------------------------
 template<class State, class Decision, class Value>
 bool backtrack(State &s)
 {
@@ -136,7 +129,6 @@ bool backtrack(State &s)
     return false;
 }
 
-// ---------------------------------------------------------------------------
 // Part 3: "most constrained first" heuristic (sudoku exam: min_element).
 // Instead of taking the next cell in order, pick the undecided cell with the
 // FEWEST remaining candidates: failures are discovered much earlier.
@@ -149,7 +141,6 @@ bool backtrack(State &s)
 //   // ADAPT: try each candidate of *c with set / recurse / cancel.
 //
 // Tiny runnable version below: pick the row with fewest legal columns.
-// ---------------------------------------------------------------------------
 int legalCount(const Queens &q, int row)
 {
     int k = 0;

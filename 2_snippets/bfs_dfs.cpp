@@ -40,10 +40,8 @@ Cell findChar(const Grid &g, char ch)
     return Cell(-1, -1);
 }
 
-// ---------------------------------------------------------------------------
 // BFS: shortest path (fewest steps) on an unweighted grid.
 // Returns the path start..goal, empty if unreachable.
-// ---------------------------------------------------------------------------
 std::vector<Cell> bfs(const Grid &g, Cell start, Cell goal)
 {
     const size_t rows = g.size();
@@ -83,7 +81,7 @@ std::vector<Cell> bfs(const Grid &g, Cell start, Cell goal)
     return {};
 }
 
-// Same BFS but returns the distance map (-1 = unreachable). Handy for "how far is X".
+// BFS distance map (-1 = unreachable).
 std::vector<std::vector<int>> bfsDistances(const Grid &g, Cell start)
 {
     const size_t rows = g.size();
@@ -110,9 +108,7 @@ std::vector<std::vector<int>> bfsDistances(const Grid &g, Cell start)
     return dist;
 }
 
-// ---------------------------------------------------------------------------
 // Recursive DFS: finds A path (not the shortest). 'path' is built with push/pop = backtracking.
-// ---------------------------------------------------------------------------
 bool dfsRec(const Grid &g, Cell cur, Cell goal,
             std::vector<std::vector<char>> &seen, std::vector<Cell> &path)
 {
@@ -141,10 +137,8 @@ std::vector<Cell> dfsRecursive(const Grid &g, Cell start, Cell goal)
     return path;
 }
 
-// ---------------------------------------------------------------------------
 // Iterative DFS with an explicit stack (no recursion depth limit). Returns visit order.
 // To rebuild a path, store parent[] exactly like in bfs().
-// ---------------------------------------------------------------------------
 std::vector<Cell> dfsIterativeOrder(const Grid &g, Cell start)
 {
     std::vector<std::vector<char>> seen(g.size(), std::vector<char>(g[0].size(), 0));
@@ -170,11 +164,9 @@ std::vector<Cell> dfsIterativeOrder(const Grid &g, Cell start)
     return order;
 }
 
-// ---------------------------------------------------------------------------
 // Flood fill (modifies the grid): replace the connected region around (r,c) by 'fill'.
-// Returns the number of cells changed. Works on any "same colour" region:
+// Returns the number of cells changed.
 // ADAPT: 'target' is the character being replaced (read from the start cell).
-// ---------------------------------------------------------------------------
 int floodFill(Grid &g, int r, int c, char fill)
 {
     if(!inside(g, r, c))

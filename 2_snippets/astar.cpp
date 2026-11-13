@@ -7,13 +7,13 @@
 //     bool operator==(const Node &other) const; // same state?
 //     double h(const Node &goal) const;         // admissible heuristic (never overestimates)
 //
-// Two flavours provided below:
+// Two flavours:
 //   astar(start, goal)             needs ONLY the interface above (linear lookup, simple, slow
 //                                  when many nodes are generated)
 //   astarKeyed(start, goal, key)   same + a key function Node -> std::string (or int, pair...)
 //                                  so duplicate detection is O(log n). Use for puzzles.
 //
-// Optional ecn::Astar plug-in is explained below (search "USE_ECN_ASTAR").
+// ecn::Astar plug-in: search "USE_ECN_ASTAR".
 #include <algorithm>
 #include <array>
 #include <chrono>
@@ -35,7 +35,7 @@ struct Stats
     size_t generated = 0;  // nodes created by neighboors()
 };
 
-// Entry of the open set (priority queue). f = g + h.
+// Open-set entry. f = g + h.
 struct OpenEntry
 {
     double f;
@@ -87,7 +87,7 @@ struct MapIndex
     std::map<Key, size_t> table;
 };
 
-// The actual algorithm. Index = LinearIndex or MapIndex.
+// Index = LinearIndex or MapIndex.
 // Returns the path start..goal (empty vector if no solution).
 template<class Node, class Index>
 std::vector<Node> core(const Node &start, const Node &goal, Index &index, Stats *stats)
@@ -160,7 +160,7 @@ std::vector<Node> core(const Node &start, const Node &goal, Index &index, Stats 
 
 } // namespace astar_snip
 
-// ----- Public API: copy these two functions (plus the namespace above) -----------------
+// Public API: copy these two functions (plus the namespace above)
 
 // Only requires the professor's Node interface.
 template<class Node>
@@ -181,10 +181,8 @@ std::vector<Node> astarKeyed(const Node &start, const Node &goal, KeyFn key,
     return astar_snip::core(start, goal, index, stats);
 }
 
-// ---------------------------------------------------------------------------------------
 // Demo node: 8-puzzle (3x3 sliding tiles). 0 is the blank.
 // ADAPT: replace this whole struct by your own state (keep the 4 interface methods).
-// ---------------------------------------------------------------------------------------
 struct Puzzle
 {
     std::array<int, 9> t;
@@ -193,7 +191,7 @@ struct Puzzle
 
     bool operator==(const Puzzle &o) const { return t == o.t; }
 
-    int distToPrevious() const { return 1; }    // every slide costs 1
+    int distToPrevious() const { return 1; }
 
     // Manhattan distance of every tile (blank excluded) to its place in 'goal'.
     double h(const Puzzle &goal) const
@@ -289,9 +287,7 @@ size_t moves(const std::vector<Puzzle> &path)
     return path.empty() ? size_t(0) : path.size() - 1;
 }
 
-// =======================================================================================
 // Plugging a Node into the course's own ecn::Astar  (maze/include/a_star.h)
-// =======================================================================================
 // Call:   std::vector<Node> path = ecn::Astar(start, goal);   // namespace ecn, header <a_star.h>
 // It prints stats ("nodes created, evaluated, shortcuts") and the time, returns the path.
 //

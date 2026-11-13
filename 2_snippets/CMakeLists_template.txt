@@ -16,18 +16,18 @@ cmake_minimum_required(VERSION 3.10)
 # Project name + language. ADAPT: name.
 project(my_project LANGUAGES CXX)
 
-# ---- language standard -----------------------------------------------------------
-set(CMAKE_CXX_STANDARD 17)              # use C++17
+# language standard
+set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)     # fail instead of silently falling back to older
 set(CMAKE_CXX_EXTENSIONS OFF)           # -std=c++17 instead of -std=gnu++17
 
-# ---- build type: Release unless the user asked otherwise -----------------------------
+# build type: Release unless set otherwise
 # Without this, CMake builds with NO optimisation (very slow for A*, GA, minimax).
 if(NOT CMAKE_BUILD_TYPE AND NOT CMAKE_CONFIGURATION_TYPES)
   set(CMAKE_BUILD_TYPE Release CACHE STRING "Build type" FORCE)
 endif()
 
-# ---- option: sanitizers ----------------------------------------------------------------
+# option: sanitizers
 # cmake -DSANITIZE=ON ..  adds -g (debug info) and the two sanitizers:
 #   address   : out-of-bounds, use-after-free, leaks
 #   undefined : signed overflow, bad shifts, null deref ...
@@ -40,13 +40,13 @@ if(SANITIZE)
   set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -fsanitize=address,undefined")
 endif()
 
-# ---- warnings (GCC / Clang) ------------------------------------------------------------
+# warnings (GCC / Clang)
 # Read them: most exam bugs (unused variable, sign compare, missing return) show up here.
 if(CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
   add_compile_options(-Wall -Wextra)
 endif()
 
-# ---- your program -----------------------------------------------------------------------
+# your program
 # ADAPT: executable name and the list of .cpp files. Headers do not need to be listed.
 add_executable(my_program
   main.cpp
@@ -57,7 +57,7 @@ add_executable(my_program
 # Where #include "..." and <...> of your own headers are searched. ADAPT or delete.
 # target_include_directories(my_program PRIVATE ${CMAKE_SOURCE_DIR}/include)
 
-# ---- optional libraries: used only if installed ------------------------------------------
+# optional libraries: used only if installed
 # find_package(... QUIET) never stops the configuration. We test the _FOUND variable and,
 # if present, link the library and define a macro so the code can use #ifdef USE_OPENCV.
 
@@ -92,10 +92,10 @@ endif()
 # find_package(Threads REQUIRED)
 # target_link_libraries(my_program PRIVATE Threads::Threads)
 
-# ---- copy data files next to the executable (optional) ----------------------------------
+# copy data files next to the executable (optional)
 # file(COPY ${CMAKE_SOURCE_DIR}/data DESTINATION ${CMAKE_BINARY_DIR})
 
-# ---- several executables sharing code (optional) ------------------------------------------
+# several executables sharing code (optional)
 # add_library(common STATIC common.cpp)
 # add_executable(prog1 prog1.cpp)
 # target_link_libraries(prog1 PRIVATE common)

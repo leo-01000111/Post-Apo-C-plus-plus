@@ -24,9 +24,7 @@ struct City
     double x, y;
 };
 
-// ---------------------------------------------------------------------------
 // Problem definition (ADAPT)
-// ---------------------------------------------------------------------------
 struct Individual
 {
     std::vector<int> genes;    // a permutation of 0..n-1 = visiting order
@@ -49,7 +47,7 @@ Individual randomIndividual(size_t n, std::mt19937 &rng)
 {
     Individual ind;
     ind.genes.resize(n);
-    std::iota(ind.genes.begin(), ind.genes.end(), 0);   // 0,1,2,...,n-1
+    std::iota(ind.genes.begin(), ind.genes.end(), 0);
     std::shuffle(ind.genes.begin(), ind.genes.end(), rng);
     return ind;
 }
@@ -104,9 +102,7 @@ void inversionMutation(std::vector<int> &g, std::mt19937 &rng)
                  g.begin() + static_cast<std::ptrdiff_t>(b) + 1);
 }
 
-// ---------------------------------------------------------------------------
 // Generic GA machinery
-// ---------------------------------------------------------------------------
 struct Params
 {
     size_t populationSize = 150;
@@ -148,7 +144,6 @@ Individual evolve(const std::vector<City> &cities, const Params &prm, std::mt199
     std::uniform_real_distribution<double> unit(0.0, 1.0);
     auto byCost = [](const Individual &a, const Individual &b) { return a.cost < b.cost; };
 
-    // initial population
     std::vector<Individual> pop;
     for(size_t i = 0; i < prm.populationSize; ++i)
     {

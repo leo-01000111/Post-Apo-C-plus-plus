@@ -8,10 +8,8 @@
 #include <utility>
 #include <vector>
 
-// ---------------------------------------------------------------------------
 // Towers of Hanoi: move n discs from 'from' to 'to' using 'via'.
 // Move n-1 to via, move the big one, move n-1 from via onto it. 2^n - 1 moves.
-// ---------------------------------------------------------------------------
 void hanoi(int n, char from, char to, char via, long long &moves, bool print)
 {
     if(n == 0)
@@ -23,10 +21,8 @@ void hanoi(int n, char from, char to, char via, long long &moves, bool print)
     hanoi(n - 1, via, to, from, moves, print);
 }
 
-// ---------------------------------------------------------------------------
 // Permutations by swapping (in place, with undo = backtracking pattern).
 // ADAPT: replace the print by whatever you do with a full permutation.
-// ---------------------------------------------------------------------------
 void permute(std::vector<int> &a, size_t k, long long &count, bool print)
 {
     if(k == a.size())
@@ -61,9 +57,7 @@ long long permuteStl(std::vector<int> a)
     return n;
 }
 
-// ---------------------------------------------------------------------------
 // Subsets (power set): for each item either skip it or take it.
-// ---------------------------------------------------------------------------
 void subsets(const std::vector<int> &items, size_t i, std::vector<int> &current,
              std::vector<std::vector<int>> &out)
 {
@@ -104,9 +98,7 @@ bool subsetSum(const std::vector<int> &items, size_t i, int target)
     return subsetSum(items, i + 1, target - items[i]) || subsetSum(items, i + 1, target);
 }
 
-// ---------------------------------------------------------------------------
-// Memoization: remember results of calls already computed.
-// ---------------------------------------------------------------------------
+// Memoization
 // Fibonacci: naive is exponential, memoised is linear.
 long long fibNaive(int n)
 {
@@ -121,7 +113,7 @@ long long fibMemo(int n, std::unordered_map<int, long long> &memo)
         return n;
     auto it = memo.find(n);
     if(it != memo.end())
-        return it->second;                      // already known
+        return it->second;
     const long long r = fibMemo(n - 1, memo) + fibMemo(n - 2, memo);
     memo[n] = r;                                // store before returning
     return r;
@@ -146,7 +138,7 @@ long long ways(int amount, size_t idx, const std::vector<int> &coins,
     return r;
 }
 
-// Bottom-up (iterative) alternative of the same idea: dynamic programming.
+// Bottom-up dynamic programming, same result.
 long long fibBottomUp(int n)
 {
     if(n < 2)

@@ -33,9 +33,7 @@ struct SearchResult
     long nodes = 0;
 };
 
-// ---------------------------------------------------------------------------
-// Plain negamax WITHOUT pruning (for comparison / simplest correct version).
-// ---------------------------------------------------------------------------
+// Plain negamax, no pruning (reference version).
 template<class G>
 int negamaxPlain(G &g, int depth, long &nodes)
 {
@@ -57,10 +55,8 @@ int negamaxPlain(G &g, int depth, long &nodes)
     return best;
 }
 
-// ---------------------------------------------------------------------------
 // Negamax with alpha-beta pruning and a depth limit. Call with
 // alpha = -2*WIN, beta = 2*WIN at the root.
-// ---------------------------------------------------------------------------
 template<class G>
 int negamax(G &g, int depth, int alpha, int beta, long &nodes)
 {
@@ -88,7 +84,7 @@ int negamax(G &g, int depth, int alpha, int beta, long &nodes)
     return best;
 }
 
-// Root: tries every move and returns the best one (with score and node count).
+// Root: best move with its score and node count.
 template<class G>
 SearchResult<typename G::Move> bestMove(G &g, int depth, bool prune = true)
 {
@@ -115,7 +111,7 @@ SearchResult<typename G::Move> bestMove(G &g, int depth, bool prune = true)
 }
 
 // Textbook version with an explicit maximizing flag, evaluate() from a FIXED player's
-// point of view (not the mover's). Kept only as a reference of the non-negamax form.
+// point of view (not the mover's), for reference.
 //   int minimax(G &g, int depth, bool maximizing) {
 //       if (g.isTerminal() || depth == 0) return g.evaluateFor(maxPlayer);
 //       int best = maximizing ? -INF : +INF;
@@ -128,11 +124,9 @@ SearchResult<typename G::Move> bestMove(G &g, int depth, bool prune = true)
 //       return best;
 //   }
 
-// ---------------------------------------------------------------------------
 // Game 1: Nim with sticks. Take 1..3 sticks, whoever takes the LAST stick wins.
 // (Variant "last stick loses": change evaluate() to +WIN when sticks == 0, since then
 //  the player to move has WON because the opponent took the last one.)
-// ---------------------------------------------------------------------------
 class Nim
 {
 public:
@@ -156,10 +150,8 @@ private:
     int sticks_;
 };
 
-// ---------------------------------------------------------------------------
 // Game 2: Connect Four, 6 rows x 7 columns. Players are +1 (first) and -1 (second).
 // Move = column index 0..6.
-// ---------------------------------------------------------------------------
 class Connect4
 {
 public:
