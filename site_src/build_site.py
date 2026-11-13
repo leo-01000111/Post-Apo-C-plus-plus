@@ -435,7 +435,7 @@ def build():
 <script>window.INDEX={idx};</script>
 <script>{js}</script>
 </body></html>"""
-    OUT.write_text(doc, encoding="utf-8")
+    OUT.write_text(doc, encoding="utf-8", newline="\n")  # LF on every OS: same bytes as the repo
     print(f"wrote {OUT} ({OUT.stat().st_size // 1024} KB, {len(INDEX)} search entries)")
 
 
