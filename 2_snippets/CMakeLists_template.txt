@@ -1,0 +1,101 @@
+# CMakeLists_template.txt - copy to your project folder as "CMakeLists.txt" and edit.
+#
+# Typical use (out-of-source build):
+#     mkdir build && cd build
+#     cmake ..                      # Release by default (fast)
+#     cmake -DSANITIZE=ON ..        # debug build with address + undefined-behaviour checks
+#     cmake -DCMAKE_BUILD_TYPE=Debug ..   # plain debug (for gdb)
+#     make                          # or: cmake --build .
+#     ./my_program
+#
+# ADAPT: project name, source files, optional libraries.
+
+# Oldest CMake version this file is written for. 3.10 is on every lab PC.
+cmake_minimum_required(VERSION 3.10)
+
+# Project name + language. ADAPT: name.
+project(my_project LANGUAGES CXX)
+
+# ---- language standard -----------------------------------------------------------
+set(CMAKE_CXX_STANDARD 17)              # use C++17
+set(CMAKE_CXX_STANDARD_REQUIRED ON)     # fail instead of silently falling back to older
+set(CMAKE_CXX_EXTENSIONS OFF)           # -std=c++17 instead of -std=gnu++17
+
+# ---- build type: Release unless the user asked otherwise -----------------------------
+# Without this, CMake builds with NO optimisation (very slow for A*, GA, minimax).
+if(NOT CMAKE_BUILD_TYPE AND NOT CMAKE_CONFIGURATION_TYPES)
+  set(CMAKE_BUILD_TYPE Release CACHE STRING "Build type" FORCE)
+endif()
+
+# ---- option: sanitizers ----------------------------------------------------------------
+# cmake -DSANITIZE=ON ..  adds -g (debug info) and the two sanitizers:
+#   address   : out-of-bounds, use-after-free, leaks
+#   undefined : signed overflow, bad shifts, null deref ...
+# Slower program, but it tells you the exact line of a crash. Do not combine with valgrind.
+option(SANITIZE "Build with -g -fsanitize=address,undefined" OFF)
+if(SANITIZE)
+  set(CMAKE_BUILD_TYPE Debug CACHE STRING "Build type" FORCE)
+  add_compile_options(-g -fno-omit-frame-pointer -fsanitize=address,undefined)
+  # the sanitizer runtime must also be given to the linker (works on any CMake version)
+  set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -fsanitize=address,undefined")
+endif()
+
+# ---- warnings (GCC / Clang) ------------------------------------------------------------
+# Read them: most exam bugs (unused variable, sign compare, missing return) show up here.
+if(CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
+  add_compile_options(-Wall -Wextra)
+endif()
+
+# ---- your program -----------------------------------------------------------------------
+# ADAPT: executable name and the list of .cpp files. Headers do not need to be listed.
+add_executable(my_program
+  main.cpp
+  # solver.cpp
+  # grid.cpp
+)
+
+# Where #include "..." and <...> of your own headers are searched. ADAPT or delete.
+# target_include_directories(my_program PRIVATE ${CMAKE_SOURCE_DIR}/include)
+
+# ---- optional libraries: used only if installed ------------------------------------------
+# find_package(... QUIET) never stops the configuration. We test the _FOUND variable and,
+# if present, link the library and define a macro so the code can use #ifdef USE_OPENCV.
+
+# OpenCV (images, maze display). No REQUIRED -> no error when absent.
+find_package(OpenCV QUIET)
+if(OpenCV_FOUND)
+  message(STATUS "OpenCV found: ${OpenCV_VERSION}")
+  target_include_directories(my_program PRIVATE ${OpenCV_INCLUDE_DIRS})
+  target_link_libraries(my_program PRIVATE ${OpenCV_LIBS})
+  target_compile_definitions(my_program PRIVATE USE_OPENCV)
+else()
+  message(STATUS "OpenCV not found: building without it")
+endif()
+
+# yaml-cpp (reading .yaml configuration files).
+find_package(yaml-cpp QUIET)
+if(yaml-cpp_FOUND OR YAML_CPP_FOUND)
+  message(STATUS "yaml-cpp found")
+  # Newer versions export the target yaml-cpp, older ones only a variable.
+  if(TARGET yaml-cpp)
+    target_link_libraries(my_program PRIVATE yaml-cpp)
+  else()
+    target_include_directories(my_program PRIVATE ${YAML_CPP_INCLUDE_DIR})
+    target_link_libraries(my_program PRIVATE ${YAML_CPP_LIBRARIES})
+  endif()
+  target_compile_definitions(my_program PRIVATE USE_YAML)
+else()
+  message(STATUS "yaml-cpp not found: building without it")
+endif()
+
+# Threads (only if you use std::thread).
+# find_package(Threads REQUIRED)
+# target_link_libraries(my_program PRIVATE Threads::Threads)
+
+# ---- copy data files next to the executable (optional) ----------------------------------
+# file(COPY ${CMAKE_SOURCE_DIR}/data DESTINATION ${CMAKE_BINARY_DIR})
+
+# ---- several executables sharing code (optional) ------------------------------------------
+# add_library(common STATIC common.cpp)
+# add_executable(prog1 prog1.cpp)
+# target_link_libraries(prog1 PRIVATE common)

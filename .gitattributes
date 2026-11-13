@@ -1,0 +1,5 @@
+# LF everywhere so the bash tools work when cloned on Windows and copied to a drive
+* text=auto eol=lf
+*.woff2 binary
+*.pdf binary
+*.png binary

@@ -1,0 +1,12 @@
+# Third-party material: fetched locally with tools/fetch_extras.sh, never published here.
+4_course/
+5_repo/
+6_reference/
+
+# build output / caches
+build/
+__pycache__/
+*.pyc
+
+# course subject inside the solved exam (third-party, kept on the drive only)
+3_solved_exams/*/subject/
