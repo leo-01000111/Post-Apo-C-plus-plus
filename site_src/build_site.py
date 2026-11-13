@@ -207,18 +207,20 @@ def page_home():
     add_index("home", "home-timer", "Exam timer (2 h)", "timer start 08:00 elapsed left phase")
 
     links = "".join([
-        flink("4_course/subjects/sudoku_exam.pdf", "Sudoku exam", COURSE_REPO + "sudoku/subject/sudoku.pdf"),
-        flink("4_course/subjects/maze_exam.pdf", "Maze exam", COURSE_REPO + "maze/subject/ARPRO_maze.pdf"),
-        flink("4_course/subjects/open_projects.pdf", "Open projects", COURSE_REPO + "open_projects/open_projects.pdf"),
-        flink("4_course/slides/okRobotProgramming.pdf", "C++ slides", ""),
+        flink("4_course/subjects/sudoku_exam.pdf", "Sudoku", COURSE_REPO + "sudoku/subject/sudoku.pdf"),
+        flink("4_course/subjects/maze_exam.pdf", "Maze", COURSE_REPO + "maze/subject/ARPRO_maze.pdf"),
+        flink("4_course/subjects/open_projects.pdf", "Projects", COURSE_REPO + "open_projects/open_projects.pdf"),
+        flink("4_course/slides/okRobotProgramming.pdf", "Slides", ""),
         flink("6_reference/cppreference/reference/en/index.html", "cppreference", "https://en.cppreference.com/w/"),
     ])
+    add_index("home", "home-links", "Quick open: exam subjects, slides, cppreference", "sudoku maze open projects slides cppreference pdf")
     return f"""
 <div class="hero">
   <div>
     <h1>{SHORT}</h1>
     <div class="row">{btn("Search everything", variant="primary", deg=0, size="lg", attrs=" data-open-palette")}
       {btn("Which algorithm", "#algo", "secondary", 0, size="lg")}</div>
+    <div class="quick" id="home-links" aria-label="Quick open"><span class="label">Open</span>{links}</div>
   </div>
   <div class="hero-minor">
     <section class="card" id="home-timer"><h3 class="card-h"><span>Exam timer</span></h3>
@@ -234,9 +236,6 @@ def page_home():
   <section class="card" id="home-routine"><h3 class="card-h"><span>Routine</span></h3>
     <div class="card-b checklist">{checklist}<div class="row" style="margin-top:12px">{btn("Uncheck all", variant="ghost", attrs=' id="chk-reset"')}</div></div></section>
   <div class="stack">
-    <section class="card" id="home-links"><h3 class="card-h"><span>Quick open</span></h3>
-      <div class="card-b"><div class="links">{links}</div>
-      <p class="small muted local-note" data-online-note hidden>Slides are on the drive only.</p></div></section>
     {card("home", "Start of exam", md(START_CMDS), cid="home-start")}
   </div>
 </div>

@@ -221,3 +221,9 @@ ul.bad li::before { content: ""; flex: none; width: 10px; height: 10px; margin-t
   .top .hp-sign--sm.hp-sign--location { padding: 0 9px; }
   #nav-toggle, .search-bar { padding: 0 8px; }
 }
+/* quick open: one row under the title, never wraps (scrolls sideways on a narrow phone) */
+.quick { display: flex; align-items: center; gap: var(--space-2); flex-wrap: nowrap; overflow-x: auto; margin-top: var(--space-3); padding: 2px; scrollbar-width: thin; }
+.quick .label { flex: none; margin-right: var(--space-1); }
+.quick .hp-btn { flex: none; white-space: nowrap; min-height: 32px; padding: 0 var(--space-2); font-size: 13px; }
+.quick .hp-btn svg { width: 13px; height: 13px; }
+.hero > *, .home-grid > * { min-width: 0; }
