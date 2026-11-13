@@ -222,7 +222,7 @@
     if (ev.key === "Escape") { closePal(); help.hidden = true; return; }
     if (typing || ev.ctrlKey || ev.metaKey || ev.altKey) return;
     if (ev.key === "/") { ev.preventDefault(); openPal(); }
-    else if (/^[1-8]$/.test(ev.key)) { var a = $$(".nav-p")[+ev.key - 1]; if (a) location.hash = "#" + a.dataset.page; }
+    else if (/^[0-9]$/.test(ev.key)) { var a = $$(".nav-p")[ev.key === "0" ? 9 : +ev.key - 1]; if (a) location.hash = "#" + a.dataset.page; }
     else if (ev.key === "t") setTheme(curTheme() === "dark" ? "light" : "dark");
     else if (ev.key === "+" || ev.key === "=") font(1);
     else if (ev.key === "-") font(-1);

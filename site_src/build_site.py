@@ -26,7 +26,7 @@ SITE = "https://www.leongorecki.eu/"
 COURSE_REPO = "https://github.com/oKermorgant/ecn_arpro/blob/master/"
 
 PAGES = [  # id, label
-    ("home", "Home"), ("cpp", "C++"), ("stl", "STL"), ("errors", "Errors & debug"),
+    ("home", "Home"), ("mistakes", "My mistakes"), ("routine", "Routine"), ("cpp", "C++"), ("stl", "STL"), ("errors", "Errors & debug"),
     ("algo", "Algorithms"), ("snippets", "Snippets"), ("exams", "Solved exams"), ("course", "Course files"),
 ]
 INDEX = []
@@ -149,7 +149,7 @@ def flink(href, label, online=None, variant="ghost"):
 
 
 # ---------------------------------------------------------------- pages
-def page_home():
+def page_mistakes():
     items, cur = [], None
     for ln in (ROOT / "1_cheatsheet/my_mistakes.md").read_text(encoding="utf-8").splitlines():
         if ln.startswith("- "):
@@ -162,8 +162,35 @@ def page_home():
         txt = "\n".join(it).strip()
         m = re.match(r"\*\*(.+?)\*\*\s*(.*)", txt, re.S)
         title, rest = (m.group(1), m.group(2)) if m else (txt[:60], txt)
-        mcards.append(card("home", code_title(title.rstrip(":.")), md(rest), cls="mistake", kicker=f"Mistake {n:02d}"))
+        mcards.append(card("mistakes", code_title(title.rstrip(":.")), md(rest), cls="mistake", kicker=f"Mistake {n:02d}"))
+    return f'{marking("holding", "Hold short · read first")}<div class="cards">{"".join(mcards)}</div>'
 
+
+def page_routine():
+    return md_cards("routine", ROOT / "1_cheatsheet/exam_routine.md", skip_h2=("Exam routine",))
+
+
+START_CMDS = """```bash
+# once per PC: git needs a name
+git config --global user.name exam
+git config --global user.email exam@local
+
+# in the exam folder (with CMakeLists.txt)
+K=~/Post-Apo-C-plus-plus/tools
+echo build/ > .gitignore
+git init -q && git add -A
+git commit -qm start
+bash $K/build.sh
+
+# crash -> exact line
+bash $K/build.sh . Sanitize
+
+# after each method that works
+git commit -qam "prune ok"
+```"""
+
+
+def page_home():
     routine = [
         ("00-10 min", "Read the whole subject. Note every TODO and its order."),
         ("00-10 min", "Build the untouched project (bash tools/build.sh dir). It must compile before you touch it."),
@@ -198,7 +225,7 @@ def page_home():
         <div class="t-big"><span><span class="label">Elapsed</span><br><b id="t-elapsed">0:00</b></span><span><span class="label">Left</span><br><b id="t-left">2:00</b></span></div>
         <div class="t-bar"><div class="t-ph p1" title="Read + build">Read</div><div class="t-ph p2" title="TODOs">TODOs</div><div class="t-ph p3" title="Compile + commit">End</div><div id="t-fill"></div></div>
         <div class="row">{btn("Start now", variant="secondary", attrs=' id="t-start"')}{btn("Started 08:00", variant="ghost", attrs=' id="t-08"')}{btn("Reset", variant="ghost", attrs=' id="t-reset"')}</div>
-        <p class="small muted" id="t-phase" style="margin:12px 0 0">Not started.</p>
+        <p class="small muted" id="t-phase" style="margin:8px 0 0">Not started.</p>
       </div></section>
   </div>
 </div>
@@ -209,14 +236,10 @@ def page_home():
     <section class="card" id="home-links"><h3 class="card-h"><span>Quick open</span></h3>
       <div class="card-b"><div class="links">{links}</div>
       <p class="small muted local-note" data-online-note hidden>Slides are on the drive only.</p></div></section>
+    {card("home", "Start of exam", md(START_CMDS), cid="home-start")}
   </div>
 </div>
-{marking("holding", "Hold short · read first")}
-<h2 class="sec-h hold-head">My own mistakes <span class="label">from practice</span></h2>
-<div class="cards">{''.join(mcards)}</div>
-{marking("centerline")}
-<h2 class="sec-h">Routine details</h2>
-""" + md_cards("home", ROOT / "1_cheatsheet/exam_routine.md", skip_h2=("Exam routine",))
+"""
 
 
 def page_stl():
@@ -367,7 +390,7 @@ def inline_fonts(css):
 
 
 def build():
-    bodies = {"home": page_home(), "cpp": md_cards("cpp", ROOT / "1_cheatsheet/cpp_cheatsheet.md"), "stl": page_stl(),
+    bodies = {"home": page_home(), "mistakes": page_mistakes(), "routine": page_routine(), "cpp": md_cards("cpp", ROOT / "1_cheatsheet/cpp_cheatsheet.md"), "stl": page_stl(),
               "errors": md_cards("errors", ROOT / "1_cheatsheet/compiler_errors.md"), "algo": page_algo(),
               "snippets": page_snippets(), "exams": page_exams(), "course": page_course()}
     for pid, label in PAGES:
@@ -418,7 +441,7 @@ def build():
 </div></div>
 <div class="palette" id="helpbox" hidden><div class="pal-box help">
   <h3>Keyboard</h3>
-  <p><kbd>CTRL K</kbd> or <kbd>/</kbd> search &middot; <kbd>1</kbd>&ndash;<kbd>8</kbd> pages &middot; <kbd>T</kbd> day or night &middot; <kbd>+</kbd> <kbd>&minus;</kbd> text size &middot; <kbd>ESC</kbd> close</p>
+  <p><kbd>CTRL K</kbd> or <kbd>/</kbd> search &middot; <kbd>1</kbd>&ndash;<kbd>9</kbd>, <kbd>0</kbd> pages &middot; <kbd>T</kbd> day or night &middot; <kbd>+</kbd> <kbd>&minus;</kbd> text size &middot; <kbd>ESC</kbd> close</p>
 </div></div>
 <div class="toast" id="toast"></div>
 <script>window.INDEX={idx};</script>
