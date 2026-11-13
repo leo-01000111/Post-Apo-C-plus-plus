@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Configure + build a CMake project in ./build (Release by default).
+# Configure + build a CMake project in ./build (Release by default; Sanitize uses ./build-sanitize).
 #   bash build.sh [project_dir] [Debug|Release|Sanitize]
 # Sanitize = Debug + AddressSanitizer/UBSan: crashes point at the exact line.
 set -e
@@ -11,6 +11,7 @@ case "$MODE" in
   Sanitize) FLAGS=(-DCMAKE_BUILD_TYPE=Debug "-DCMAKE_CXX_FLAGS=-g -fsanitize=address,undefined -fno-omit-frame-pointer") ;;
   *)        FLAGS=(-DCMAKE_BUILD_TYPE="$MODE") ;;
 esac
-mkdir -p build && cd build
+B=build; [ "$MODE" = Sanitize ] && B=build-sanitize   # keep Qt Creator's build/ untouched
+mkdir -p "$B" && cd "$B"
 cmake "${FLAGS[@]}" .. && make -j"$(nproc 2>/dev/null || echo 2)"
 echo; echo "Built in $(pwd). Executables:"; find . -maxdepth 1 -type f -perm -u+x -printf '  ./%f\n' 2>/dev/null || ls

@@ -176,13 +176,14 @@ git config --global user.name exam
 git config --global user.email exam@local
 
 # in the exam folder (with CMakeLists.txt)
-K=~/Post-Apo-C-plus-plus/tools
-echo build/ > .gitignore
+ideconf
+qtcreator CMakeLists.txt &
+echo 'build*/' > .gitignore
 git init -q && git add -A
 git commit -qm start
-bash $K/build.sh
 
-# crash -> exact line
+# crash -> exact line (own build-sanitize/)
+K=~/Post-Apo-C-plus-plus/tools
 bash $K/build.sh . Sanitize
 
 # after each method that works
@@ -193,7 +194,7 @@ git commit -qam "prune ok"
 def page_home():
     routine = [
         ("00-10 min", "Read the whole subject. Note every TODO and its order."),
-        ("00-10 min", "Build the untouched project (bash tools/build.sh dir). It must compile before you touch it."),
+        ("00-10 min", "ideconf, qtcreator CMakeLists.txt, build the untouched project. It must compile before you touch it."),
         ("00-10 min", "git init && git add -A && git commit -qm start"),
         ("10-110 min", "TODOs in the subject's order. Translate the pseudocode line by line."),
         ("10-110 min", "Commit after every method that works (git commit -qam \"prune ok\")."),
