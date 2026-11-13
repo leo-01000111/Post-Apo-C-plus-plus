@@ -12,3 +12,5 @@ Each `.cpp` is standalone: `g++ -std=c++17 -Wall -Wextra -O2 file.cpp -o file &&
 - `random_timing.cpp` - `mt19937` seeding, uniform int/real, bernoulli, `discrete_distribution`, `shuffle`, `pickRandom`, `timeMs` (chrono).
 - `recursion.cpp` - `hanoi`, `permute`, `subsets` / `subsetsMask`, `subsetSum`, memoisation (`fibMemo`, `ways`).
 - `CMakeLists_template.txt` - project template: C++17, Release default, `-DSANITIZE=ON`, `-Wall -Wextra`, optional OpenCV / yaml-cpp.
+- `dbg.h` - print debugging: `dbg(x, v, m)` prints names and values (containers, pairs, tuples, nested) to stderr; `-DDBG_OFF` silences it.
+- `method_test.cpp` - test one method alone: `CHECK` macro that works in Release, round-trip test on a set/cancel cell.

@@ -127,3 +127,31 @@ One-shot: `gdb -batch -ex run -ex bt ./main`.
 
 ### Poor man's debugging
 `std::cerr << "here " << x << std::endl;` and `assert(cond);` (`<cassert>`).
+
+## Print debugging with dbg.h
+
+```cpp
+#include "dbg.h"          // copy 2_snippets/dbg.h next to your .cpp
+dbg(x, v, cell.candidates(), m.size());
+// stderr: [grid.cpp:42] x = 3 | v = {1, 2} | cell.candidates() = {4, 7} | m.size() = 2
+```
+
+- Prints names and values of numbers, strings, pairs, tuples and any container, nested ones included.
+- `-DDBG_OFF` (or `#define DBG_OFF` before the include) silences every call without deleting them.
+- Goes to stderr, so it does not mix with the program's normal output.
+
+## Testing one method
+
+Smallest state by hand, call the method, check, undo, check again. Full example: `2_snippets/method_test.cpp`.
+
+```cpp
+static int failures = 0;
+#define CHECK(c) do { if (!(c)) { ++failures; std::cerr << "FAIL line " << __LINE__ << ": " #c "\n"; } } while (0)
+
+a.set(2);    CHECK(!b.has(2));    // normal case
+a.cancel();  CHECK(b.has(2));     // round trip back to the start
+```
+
+- `assert` does nothing in Release (`NDEBUG`); `CHECK` always runs.
+- Test private methods through the public ones that call them (`prune` through `set`).
+- Temporary: put it at the top of `main`, `return 0;` after it, delete before handing in.

@@ -318,7 +318,7 @@ FN_RE = re.compile(r"^(?:\s{0,4})(?:template\s*<[^>]*>\s*)?(?:(?:static|inline|c
 FN2_RE = re.compile(r"^\s{0,4}(?:(?:static|inline|constexpr)\s+)*[A-Za-z_][\w:<>,\s\*&]*?[\s\*&]"
                     r"([A-Za-z_]\w*)\s*\([^;{)=]*,\s*$")
 TYPE_RE = re.compile(r"^\s{0,4}(?:template\s*<[^>]*>\s*)?(struct|class)\s+([A-Za-z_]\w*)\b(?!.*;\s*$)")
-SKIP = {"if", "for", "while", "switch", "return", "main", "else", "catch", "sizeof", "operator"}
+SKIP = {"if", "for", "while", "switch", "return", "main", "else", "catch", "sizeof", "operator", "constexpr"}
 
 
 def snippet_block(page, cid, title, desc, path):
@@ -350,7 +350,8 @@ def snippet_block(page, cid, title, desc, path):
 NICE = {"backtracking.cpp": "Backtracking — N-queens", "astar.cpp": "A* search — 8-puzzle and ecn::Astar",
         "bfs_dfs.cpp": "BFS, DFS and flood fill", "minimax_alphabeta.cpp": "Minimax with alpha-beta — Nim, Connect Four",
         "genetic_algorithm.cpp": "Genetic algorithm — TSP", "containers_tricks.cpp": "Container tricks",
-        "random_timing.cpp": "Random numbers and timing", "recursion.cpp": "Recursion and memoisation"}
+        "random_timing.cpp": "Random numbers and timing", "recursion.cpp": "Recursion and memoisation",
+        "dbg.h": "dbg.h — print debugging", "method_test.cpp": "Testing one method"}
 
 
 def page_snippets():
@@ -361,7 +362,7 @@ def page_snippets():
             descs[m.group(1)] = md(m.group(2))[3:-4]
     out = ['<p class="lead"><code>g++ -std=c++17 -Wall -Wextra -O2 f.cpp</code> &middot; highlighted lines: <code>ADAPT:</code></p>']
     for f in NICE:
-        out.append(snippet_block("snippets", f"snip-{f[:-4]}", NICE[f], descs.get(f, ""), ROOT / "2_snippets" / f))
+        out.append(snippet_block("snippets", f"snip-{Path(f).stem}", NICE[f], descs.get(f, ""), ROOT / "2_snippets" / f))
     cm = (ROOT / "2_snippets/CMakeLists_template.txt").read_text(encoding="utf-8")
     out.append(card("snippets", "CMakeLists template", highlight(cm, CMakeLexer(), HtmlFormatter(cssclass="hl")),
                     cid="snip-cmake", cls="wide"))
