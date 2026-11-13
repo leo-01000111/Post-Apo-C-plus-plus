@@ -42,6 +42,23 @@
     });
   });
 
+  /* ---------- sidebar: clicking the current page folds / unfolds its list ---------- */
+  var curPage = null, tocCollapsed = false;
+  function paintToc() {
+    $$(".toc").forEach(function (t) { t.classList.toggle("on", t.dataset.toc === curPage && !tocCollapsed); });
+    $$(".nav-p").forEach(function (a) {
+      if (a.dataset.page === curPage) a.setAttribute("aria-expanded", tocCollapsed ? "false" : "true");
+      else a.removeAttribute("aria-expanded");
+    });
+  }
+  $$(".nav-p").forEach(function (a) {
+    a.addEventListener("click", function (ev) {
+      if (a.dataset.page !== curPage) return;          // other page: normal navigation
+      ev.preventDefault();
+      tocCollapsed = !tocCollapsed; paintToc();
+    });
+  });
+
   /* ---------- router: #page or #page/target ---------- */
   function route() {
     var h = decodeURIComponent(location.hash.slice(1)) || "home";
@@ -52,7 +69,8 @@
       var on = a.dataset.page === pid; a.classList.toggle("on", on);
       if (on) a.setAttribute("aria-current", "page"); else a.removeAttribute("aria-current");
     });
-    $$(".toc").forEach(function (t) { t.classList.toggle("on", t.dataset.toc === pid); });
+    if (pid !== curPage) { curPage = pid; tocCollapsed = false; }
+    paintToc();
     $("#side").classList.remove("open");
     document.title = (pid === "home" ? "" : PAGE_LABEL[pid] + " · ") + "Post-Apocalyptic C++";
     if (!target) { window.scrollTo(0, 0); return; }

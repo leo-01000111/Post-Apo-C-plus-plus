@@ -316,6 +316,9 @@ svg.arr { width: 1em; height: 1em; flex: none; }
 .nav-p:hover { background: var(--ground); }
 .nav-p.on { background: var(--plate); color: var(--on-plate); box-shadow: inset 0 0 0 3px var(--plate), inset 0 0 0 5px var(--on-plate); }
 .nav-p.on .num { color: var(--on-plate); }
+.nav-p[aria-expanded]::after { content: ""; margin-left: auto; border: 5px solid transparent; border-top: 6px solid currentColor; border-bottom-width: 0;
+  transition: transform var(--t-step) var(--ease-step); }
+.nav-p[aria-expanded="false"]::after { transform: rotate(-90deg); }
 .toc { display: none; margin: var(--space-1) 0 var(--space-3) 21px; border-left: var(--stroke-hair) solid var(--rule); }
 .toc.on { display: block; }
 .toc a { display: block; padding: 3px var(--space-3); font-size: 13px; line-height: 1.4; color: var(--ink-muted); text-decoration: none;
@@ -414,7 +417,7 @@ ul.bad li::before { content: ""; flex: none; width: 10px; height: 10px; margin-t
 .hero .row { display: flex; gap: var(--space-3); flex-wrap: wrap; }
 .hero-minor { position: relative; }
 .hero-minor::before { content: ""; position: absolute; top: 28px; left: 28px; right: calc(-1 * var(--space-5)); bottom: -28px; background: var(--signal); }
-.hero-minor .hp-plate { position: relative; z-index: 1; max-width: none; }
+.hero-minor > .card { position: relative; z-index: 1; margin: 0; }
 .home-grid { display: grid; grid-template-columns: minmax(0, var(--split-major)) minmax(0, var(--split-minor)); gap: var(--space-4); align-items: start; }
 .home-grid .card { margin: 0; }
 .home-grid .stack { display: grid; gap: var(--space-4); }
@@ -496,15 +499,9 @@ ul.bad li::before { content: ""; flex: none; width: 10px; height: 10px; margin-t
     <h1>Post-Apocalyptic C++</h1>
     <p class="lede">An offline C++ kit for the ARPRO exam: cheat-sheets, algorithm templates, my own mistakes and a solved past exam, searchable in one page. Built to work when there is no internet left.</p>
     <div class="row"><button type="button" class="hp-btn hp-btn--primary" data-open-palette><span>Search everything</span><svg class="arr" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><g transform="rotate(0 12 12)" fill="none" stroke="currentColor" stroke-width="3.4" stroke-linecap="square" stroke-linejoin="miter"><path d="M3.5 12H18.5"></path><path d="M12 5.2L18.8 12L12 18.8"></path></g></svg></button>
-      <a class="hp-btn hp-btn--secondary" href="#algo"><span>Which algorithm</span><svg class="arr" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><g transform="rotate(0 12 12)" fill="none" stroke="currentColor" stroke-width="3.4" stroke-linecap="square" stroke-linejoin="miter"><path d="M3.5 12H18.5"></path><path d="M12 5.2L18.8 12L12 18.8"></path></g></svg></a>
-      <a class="hp-btn hp-btn--ghost" href="https://github.com/leo-01000111/Post-Apo-C-plus-plus"><span>Repository</span><svg class="arr" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><g transform="rotate(315 12 12)" fill="none" stroke="currentColor" stroke-width="3.4" stroke-linecap="square" stroke-linejoin="miter"><path d="M3.5 12H18.5"></path><path d="M12 5.2L18.8 12L12 18.8"></path></g></svg></a></div>
+      <a class="hp-btn hp-btn--secondary" href="#algo"><span>Which algorithm</span><svg class="arr" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><g transform="rotate(0 12 12)" fill="none" stroke="currentColor" stroke-width="3.4" stroke-linecap="square" stroke-linejoin="miter"><path d="M3.5 12H18.5"></path><path d="M12 5.2L18.8 12L12 18.8"></path></g></svg></a></div>
   </div>
-  <div class="hero-minor"><section class="hp-plate" aria-label="Exam"><div class="hp-plate__head"><span class="hp-plate__title">Exam</span><span class="hp-plate__ref">PAC-01</span></div><dl><dt>Course</dt><dd>ARPRO &middot; Kermorgant</dd><dt>Date</dt><dd>Mon 16 Nov 2026</dd><dt>Time</dt><dd>08:00 &mdash; 10:00 &middot; 2 h</dd><dt>Room</dt><dd>F-RO &middot; Linux PCs</dd><dt>Rules</dt><dd>Offline &middot; own drive allowed</dd><dt>Kit</dt><dd><span class="hp-lamp hp-lamp--go"><i aria-hidden="true"></i><span>Ready</span></span></dd></dl></section></div>
-</div>
-<div class="home-grid">
-  <section class="card" id="home-routine"><h3 class="card-h"><span class="k">Checklist</span><span>Routine</span></h3>
-    <div class="card-b checklist"><label class="chk"><input type="checkbox" data-k="r0"><span class="when">00-10 min</span><span>Read the whole subject. Note every TODO and its order.</span></label><label class="chk"><input type="checkbox" data-k="r1"><span class="when">00-10 min</span><span>Build the untouched project (bash tools/build.sh dir). It must compile before you touch it.</span></label><label class="chk"><input type="checkbox" data-k="r2"><span class="when">00-10 min</span><span>git init &amp;&amp; git add -A &amp;&amp; git commit -qm start</span></label><label class="chk"><input type="checkbox" data-k="r3"><span class="when">10-110 min</span><span>TODOs in the subject&#x27;s order. Translate the pseudocode line by line.</span></label><label class="chk"><input type="checkbox" data-k="r4"><span class="when">10-110 min</span><span>Commit after every method that works (git commit -qam &quot;prune ok&quot;).</span></label><label class="chk"><input type="checkbox" data-k="r5"><span class="when">10-110 min</span><span>Stuck for more than 10 min: move to the next TODO, come back later.</span></label><label class="chk"><input type="checkbox" data-k="r6"><span class="when">110-120 min</span><span>Make sure it compiles. Comment out anything broken. Final commit.</span></label><div class="row" style="margin-top:12px"><button type="button" class="hp-btn hp-btn--ghost hp-btn--sm" id="chk-reset"><span>Uncheck all</span></button></div></div></section>
-  <div class="stack">
+  <div class="hero-minor">
     <section class="card" id="home-timer"><h3 class="card-h"><span class="k">2 h</span><span>Exam timer</span></h3>
       <div class="card-b">
         <div class="t-big"><span><span class="label">Elapsed</span><br><b id="t-elapsed">0:00</b></span><span><span class="label">Left</span><br><b id="t-left">2:00</b></span></div>
@@ -512,6 +509,12 @@ ul.bad li::before { content: ""; flex: none; width: 10px; height: 10px; margin-t
         <div class="row"><button type="button" class="hp-btn hp-btn--secondary hp-btn--sm" id="t-start"><span>Start now</span></button><button type="button" class="hp-btn hp-btn--ghost hp-btn--sm" id="t-08"><span>Started 08:00</span></button><button type="button" class="hp-btn hp-btn--ghost hp-btn--sm" id="t-reset"><span>Reset</span></button></div>
         <p class="small muted" id="t-phase" style="margin:12px 0 0">Not started.</p>
       </div></section>
+  </div>
+</div>
+<div class="home-grid">
+  <section class="card" id="home-routine"><h3 class="card-h"><span class="k">Checklist</span><span>Routine</span></h3>
+    <div class="card-b checklist"><label class="chk"><input type="checkbox" data-k="r0"><span class="when">00-10 min</span><span>Read the whole subject. Note every TODO and its order.</span></label><label class="chk"><input type="checkbox" data-k="r1"><span class="when">00-10 min</span><span>Build the untouched project (bash tools/build.sh dir). It must compile before you touch it.</span></label><label class="chk"><input type="checkbox" data-k="r2"><span class="when">00-10 min</span><span>git init &amp;&amp; git add -A &amp;&amp; git commit -qm start</span></label><label class="chk"><input type="checkbox" data-k="r3"><span class="when">10-110 min</span><span>TODOs in the subject&#x27;s order. Translate the pseudocode line by line.</span></label><label class="chk"><input type="checkbox" data-k="r4"><span class="when">10-110 min</span><span>Commit after every method that works (git commit -qam &quot;prune ok&quot;).</span></label><label class="chk"><input type="checkbox" data-k="r5"><span class="when">10-110 min</span><span>Stuck for more than 10 min: move to the next TODO, come back later.</span></label><label class="chk"><input type="checkbox" data-k="r6"><span class="when">110-120 min</span><span>Make sure it compiles. Comment out anything broken. Final commit.</span></label><div class="row" style="margin-top:12px"><button type="button" class="hp-btn hp-btn--ghost hp-btn--sm" id="chk-reset"><span>Uncheck all</span></button></div></div></section>
+  <div class="stack">
     <section class="card" id="home-links"><h3 class="card-h"><span class="k">Open</span><span>Quick open</span></h3>
       <div class="card-b"><div class="links"><a class="hp-btn hp-btn--ghost hp-btn--sm" href="4_course/subjects/sudoku_exam.pdf" data-online="https://github.com/oKermorgant/ecn_arpro/blob/master/sudoku/subject/sudoku.pdf"><span>Sudoku exam</span><svg class="arr" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><g transform="rotate(0 12 12)" fill="none" stroke="currentColor" stroke-width="3.4" stroke-linecap="square" stroke-linejoin="miter"><path d="M3.5 12H18.5"></path><path d="M12 5.2L18.8 12L12 18.8"></path></g></svg></a><a class="hp-btn hp-btn--ghost hp-btn--sm" href="4_course/subjects/maze_exam.pdf" data-online="https://github.com/oKermorgant/ecn_arpro/blob/master/maze/subject/ARPRO_maze.pdf"><span>Maze exam</span><svg class="arr" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><g transform="rotate(0 12 12)" fill="none" stroke="currentColor" stroke-width="3.4" stroke-linecap="square" stroke-linejoin="miter"><path d="M3.5 12H18.5"></path><path d="M12 5.2L18.8 12L12 18.8"></path></g></svg></a><a class="hp-btn hp-btn--ghost hp-btn--sm" href="4_course/subjects/open_projects.pdf" data-online="https://github.com/oKermorgant/ecn_arpro/blob/master/open_projects/open_projects.pdf"><span>Open projects</span><svg class="arr" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><g transform="rotate(0 12 12)" fill="none" stroke="currentColor" stroke-width="3.4" stroke-linecap="square" stroke-linejoin="miter"><path d="M3.5 12H18.5"></path><path d="M12 5.2L18.8 12L12 18.8"></path></g></svg></a><a class="hp-btn hp-btn--ghost hp-btn--sm" href="4_course/slides/okRobotProgramming.pdf" data-online="" data-local-only="1"><span>C++ slides</span><svg class="arr" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><g transform="rotate(0 12 12)" fill="none" stroke="currentColor" stroke-width="3.4" stroke-linecap="square" stroke-linejoin="miter"><path d="M3.5 12H18.5"></path><path d="M12 5.2L18.8 12L12 18.8"></path></g></svg></a><a class="hp-btn hp-btn--ghost hp-btn--sm" href="6_reference/cppreference/reference/en/index.html" data-online="https://en.cppreference.com/w/"><span>cppreference</span><svg class="arr" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><g transform="rotate(0 12 12)" fill="none" stroke="currentColor" stroke-width="3.4" stroke-linecap="square" stroke-linejoin="miter"><path d="M3.5 12H18.5"></path><path d="M12 5.2L18.8 12L12 18.8"></path></g></svg></a></div>
       <p class="small muted local-note" data-online-note hidden>Online: exam subjects open from the course repo and cppreference from the web. Slides live on the drive only.</p></div></section>
@@ -3929,7 +3932,7 @@ return best individual
 bash<span class="w"> </span>tools/find.sh<span class="w"> </span>min_element<span class="w">        </span><span class="c1"># search all text, code and slides</span>
 bash<span class="w"> </span>tools/find.sh<span class="w"> </span>-C<span class="w"> </span><span class="m">3</span><span class="w"> </span><span class="s2">&quot;erase.*remove&quot;</span>
 bash<span class="w"> </span>tools/build.sh<span class="w"> </span>path/to/project<span class="w"> </span>Sanitize<span class="w">   </span><span class="c1"># crash -&gt; exact line</span>
-</code></pre></div></div></section><section class="card " id="course-missing-files"><h3 class="card-h"><span class="k">Setup</span><span>Missing files</span><a href="#course/course-missing-files" class="anchor" title="Link to this card">LINK</a></h3><div class="card-b"><p>Course material is not in the public repository. Run <code>bash tools/fetch_extras.sh</code> once with internet: it clones the course repo, copies the exam subjects, downloads offline cppreference and extracts searchable text. Slides come from Hippocampus: drop the PDFs into <code>4_course/slides/</code> and run the script again.</p></div></section></div></main><footer class="foot"><div role="separator" class="marking-gap"><svg class="hp-marking" width="100%" height="28" aria-hidden="true" focusable="false"><defs><pattern id="hp-mk-3" width="36" height="28" patternUnits="userSpaceOnUse"><rect class="edge" x="0.5" y="11.5" width="20" height="5" fill="currentColor" stroke-width="1"></rect></pattern></defs><rect x="0" y="0" width="100%" height="28" fill="url(#hp-mk-3)"></rect></svg></div><p class="small muted">Post-Apocalyptic C++ &middot; made by Leon Górecki for the ARPRO exam at Centrale Nantes. <a href="https://github.com/leo-01000111/Post-Apo-C-plus-plus">Repository</a> &middot; <a href="https://www.leongorecki.eu/">leongorecki.eu</a></p></footer></div></div>
+</code></pre></div></div></section><section class="card " id="course-missing-files"><h3 class="card-h"><span class="k">Setup</span><span>Missing files</span><a href="#course/course-missing-files" class="anchor" title="Link to this card">LINK</a></h3><div class="card-b"><p>Course material is not in the public repository. Run <code>bash tools/fetch_extras.sh</code> once with internet: it clones the course repo, copies the exam subjects, downloads offline cppreference and extracts searchable text. Slides come from Hippocampus: drop the PDFs into <code>4_course/slides/</code> and run the script again.</p></div></section></div></main><footer class="foot"><div role="separator" class="marking-gap"><svg class="hp-marking" width="100%" height="28" aria-hidden="true" focusable="false"><defs><pattern id="hp-mk-3" width="36" height="28" patternUnits="userSpaceOnUse"><rect class="edge" x="0.5" y="11.5" width="20" height="5" fill="currentColor" stroke-width="1"></rect></pattern></defs><rect x="0" y="0" width="100%" height="28" fill="url(#hp-mk-3)"></rect></svg></div><p class="small muted">Post-Apocalyptic C++ &middot; made by Leon Górecki for the ARPRO exam at Centrale Nantes. <a href="https://www.leongorecki.eu/">leongorecki.eu</a></p></footer></div></div>
 <div class="palette" id="palette" hidden><div class="pal-box" role="dialog" aria-label="Search">
   <input id="pal-in" placeholder="Search: erase, priority_queue, undefined reference, neighboors" autocomplete="off">
   <div id="pal-res" class="pal-res"></div>
@@ -3986,6 +3989,23 @@ bash<span class="w"> </span>tools/build.sh<span class="w"> </span>path/to/projec
     });
   });
 
+  /* ---------- sidebar: clicking the current page folds / unfolds its list ---------- */
+  var curPage = null, tocCollapsed = false;
+  function paintToc() {
+    $$(".toc").forEach(function (t) { t.classList.toggle("on", t.dataset.toc === curPage && !tocCollapsed); });
+    $$(".nav-p").forEach(function (a) {
+      if (a.dataset.page === curPage) a.setAttribute("aria-expanded", tocCollapsed ? "false" : "true");
+      else a.removeAttribute("aria-expanded");
+    });
+  }
+  $$(".nav-p").forEach(function (a) {
+    a.addEventListener("click", function (ev) {
+      if (a.dataset.page !== curPage) return;          // other page: normal navigation
+      ev.preventDefault();
+      tocCollapsed = !tocCollapsed; paintToc();
+    });
+  });
+
   /* ---------- router: #page or #page/target ---------- */
   function route() {
     var h = decodeURIComponent(location.hash.slice(1)) || "home";
@@ -3996,7 +4016,8 @@ bash<span class="w"> </span>tools/build.sh<span class="w"> </span>path/to/projec
       var on = a.dataset.page === pid; a.classList.toggle("on", on);
       if (on) a.setAttribute("aria-current", "page"); else a.removeAttribute("aria-current");
     });
-    $$(".toc").forEach(function (t) { t.classList.toggle("on", t.dataset.toc === pid); });
+    if (pid !== curPage) { curPage = pid; tocCollapsed = false; }
+    paintToc();
     $("#side").classList.remove("open");
     document.title = (pid === "home" ? "" : PAGE_LABEL[pid] + " · ") + "Post-Apocalyptic C++";
     if (!target) { window.scrollTo(0, 0); return; }

@@ -184,14 +184,6 @@ def page_home():
         flink("4_course/slides/okRobotProgramming.pdf", "C++ slides", ""),
         flink("6_reference/cppreference/reference/en/index.html", "cppreference", "https://en.cppreference.com/w/"),
     ])
-    plate = (f'<section class="hp-plate" aria-label="Exam"><div class="hp-plate__head"><span class="hp-plate__title">Exam</span>'
-             f'<span class="hp-plate__ref">PAC-01</span></div><dl>'
-             f'<dt>Course</dt><dd>ARPRO &middot; Kermorgant</dd>'
-             f'<dt>Date</dt><dd>Mon 16 Nov 2026</dd>'
-             f'<dt>Time</dt><dd>08:00 &mdash; 10:00 &middot; 2 h</dd>'
-             f'<dt>Room</dt><dd>F-RO &middot; Linux PCs</dd>'
-             f'<dt>Rules</dt><dd>Offline &middot; own drive allowed</dd>'
-             f'<dt>Kit</dt><dd>{lamp("go", "Ready")}</dd></dl></section>')
     return f"""
 <div class="hero">
   <div>
@@ -199,15 +191,9 @@ def page_home():
     <h1>{NAME}</h1>
     <p class="lede">An offline C++ kit for the ARPRO exam: cheat-sheets, algorithm templates, my own mistakes and a solved past exam, searchable in one page. Built to work when there is no internet left.</p>
     <div class="row">{btn("Search everything", variant="primary", deg=0, size="lg", attrs=" data-open-palette")}
-      {btn("Which algorithm", "#algo", "secondary", 0, size="lg")}
-      {btn("Repository", REPO, "ghost", 315, size="lg")}</div>
+      {btn("Which algorithm", "#algo", "secondary", 0, size="lg")}</div>
   </div>
-  <div class="hero-minor">{plate}</div>
-</div>
-<div class="home-grid">
-  <section class="card" id="home-routine"><h3 class="card-h"><span class="k">Checklist</span><span>Routine</span></h3>
-    <div class="card-b checklist">{checklist}<div class="row" style="margin-top:12px">{btn("Uncheck all", variant="ghost", attrs=' id="chk-reset"')}</div></div></section>
-  <div class="stack">
+  <div class="hero-minor">
     <section class="card" id="home-timer"><h3 class="card-h"><span class="k">2 h</span><span>Exam timer</span></h3>
       <div class="card-b">
         <div class="t-big"><span><span class="label">Elapsed</span><br><b id="t-elapsed">0:00</b></span><span><span class="label">Left</span><br><b id="t-left">2:00</b></span></div>
@@ -215,6 +201,12 @@ def page_home():
         <div class="row">{btn("Start now", variant="secondary", attrs=' id="t-start"')}{btn("Started 08:00", variant="ghost", attrs=' id="t-08"')}{btn("Reset", variant="ghost", attrs=' id="t-reset"')}</div>
         <p class="small muted" id="t-phase" style="margin:12px 0 0">Not started.</p>
       </div></section>
+  </div>
+</div>
+<div class="home-grid">
+  <section class="card" id="home-routine"><h3 class="card-h"><span class="k">Checklist</span><span>Routine</span></h3>
+    <div class="card-b checklist">{checklist}<div class="row" style="margin-top:12px">{btn("Uncheck all", variant="ghost", attrs=' id="chk-reset"')}</div></div></section>
+  <div class="stack">
     <section class="card" id="home-links"><h3 class="card-h"><span class="k">Open</span><span>Quick open</span></h3>
       <div class="card-b"><div class="links">{links}</div>
       <p class="small muted local-note" data-online-note hidden>Online: exam subjects open from the course repo and cppreference from the web. Slides live on the drive only.</p></div></section>
@@ -390,7 +382,7 @@ def build():
         + ("" if pid == "home" else f'<div class="page-head"><span class="label">Page {n:02d} / {len(PAGES):02d}</span><h1>{label}</h1></div>')
         + bodies[pid] + "</main>" for n, (pid, label) in enumerate(PAGES, 1))
     foot = (f'<footer class="foot">{marking("centerline")}<p class="small muted">{NAME} &middot; made by Leon Górecki for the ARPRO exam at Centrale Nantes. '
-            f'<a href="{REPO}">Repository</a> &middot; <a href="{SITE}">leongorecki.eu</a></p></footer>')
+            f'<a href="{SITE}">leongorecki.eu</a></p></footer>')
 
     tokens = inline_fonts((HERE / "hp/tokens.css").read_text(encoding="utf-8"))
     comps = (HERE / "hp/components.css").read_text(encoding="utf-8")

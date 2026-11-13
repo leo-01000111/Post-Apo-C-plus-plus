@@ -44,6 +44,9 @@ svg.arr { width: 1em; height: 1em; flex: none; }
 .nav-p:hover { background: var(--ground); }
 .nav-p.on { background: var(--plate); color: var(--on-plate); box-shadow: inset 0 0 0 3px var(--plate), inset 0 0 0 5px var(--on-plate); }
 .nav-p.on .num { color: var(--on-plate); }
+.nav-p[aria-expanded]::after { content: ""; margin-left: auto; border: 5px solid transparent; border-top: 6px solid currentColor; border-bottom-width: 0;
+  transition: transform var(--t-step) var(--ease-step); }
+.nav-p[aria-expanded="false"]::after { transform: rotate(-90deg); }
 .toc { display: none; margin: var(--space-1) 0 var(--space-3) 21px; border-left: var(--stroke-hair) solid var(--rule); }
 .toc.on { display: block; }
 .toc a { display: block; padding: 3px var(--space-3); font-size: 13px; line-height: 1.4; color: var(--ink-muted); text-decoration: none;
@@ -142,7 +145,7 @@ ul.bad li::before { content: ""; flex: none; width: 10px; height: 10px; margin-t
 .hero .row { display: flex; gap: var(--space-3); flex-wrap: wrap; }
 .hero-minor { position: relative; }
 .hero-minor::before { content: ""; position: absolute; top: 28px; left: 28px; right: calc(-1 * var(--space-5)); bottom: -28px; background: var(--signal); }
-.hero-minor .hp-plate { position: relative; z-index: 1; max-width: none; }
+.hero-minor > .card { position: relative; z-index: 1; margin: 0; }
 .home-grid { display: grid; grid-template-columns: minmax(0, var(--split-major)) minmax(0, var(--split-minor)); gap: var(--space-4); align-items: start; }
 .home-grid .card { margin: 0; }
 .home-grid .stack { display: grid; gap: var(--space-4); }
