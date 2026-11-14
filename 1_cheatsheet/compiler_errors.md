@@ -10,6 +10,7 @@ Read the FIRST error only; the rest are often consequences.
 | `undefined reference to 'main'` | No main() in the compiled sources | Add main / list main.cpp in CMake |
 | `undefined reference to 'cv::imread...'` / `'sqrt'` / Qt symbols | Library not linked | `target_link_libraries(target ${OpenCV_LIBS} ...)`, or `-lm`, `-lpthread` |
 | `multiple definition of 'f()'` | Function body defined in a header included by several .cpp | Mark it `inline`, or move body to a .cpp |
+| `expected unqualified-id before '.' token` | `.` used on a TYPE (`Maze.isFree(...)`); `.` needs an object | Use the existing object (here the static member `maze`). Not `Maze()`: that compiles but builds a new empty object |
 | `no matching function for call to 'f(int, int)'` | No overload accepts these arg types/count | Read the "candidate:" lines: wrong arg count/type, missing `const`, missing include |
 | `no matching function for call to 'Foo::Foo()'` | No default ctor and you declared `Foo f;` or a member without init-list | Provide args / add init list entry / `= default` |
 | `passing 'const X' as 'this' argument discards qualifiers` | Calling a non-const method on a const object/reference (often a `const auto&` param) | Make the method `const` if it does not modify, or use a non-const variable |

@@ -23,3 +23,4 @@
 - **`vec1 < vec2` compares contents (dictionary order), not lengths.** For "fewer elements", compare `vec1.size() < vec2.size()`.
 - **Comparator for `min_element`:** returns `true` if `c1` is *better*. Rule out invalid items first (`if (c1.digit()) return false; if (c2.digit()) return true;`), then compare.
 - **Bookkeeping line:** `prune` must increment `pruned_count_[guess]` "in any case", otherwise `restore` breaks.
+- **Type vs object (maze exam):** `Maze.isFree(x, y)` does not compile (`expected unqualified-id before '.'`): `Maze` is a class. `Maze().isFree(x, y)` compiles but creates a NEW empty maze, so every cell is a wall and A* finds no path. Use the loaded object: the static member `maze` (`Point::maze`), i.e. `maze.isFree(x, y)`.
