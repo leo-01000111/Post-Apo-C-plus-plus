@@ -23,7 +23,8 @@ fi
 
 if [ -x "$K/firefox/firefox" ]; then
   echo "== Opening portable Firefox"
-  nohup "$K/firefox/firefox" --no-remote --profile "$K/ffprofile" "${URLS[@]}" > /dev/null 2>&1 &
+  # no --no-remote: if our Firefox (this profile) is still open, the pages go to it as new tabs
+  nohup "$K/firefox/firefox" --profile "$K/ffprofile" "${URLS[@]}" > /dev/null 2>&1 &
 else
   for u in "${URLS[@]}"; do xdg-open "$u" > /dev/null 2>&1 & done
 fi

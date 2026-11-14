@@ -19,7 +19,7 @@ Copy the `Post-Apo-C-plus-plus` folder to the root of a USB drive (FAT32 or exFA
 1. Plug in the drive and open it in the file manager (Dolphin).
 2. Go into `Post-Apo-C-plus-plus` and press **Shift+F4** ("Open Terminal Here").
 3. Run `bash tools/setup.sh`. It copies the kit to `~/Post-Apo-C-plus-plus`, unpacks the portable Firefox there (no admin rights needed), starts the search server and opens the kit and the search page.
-4. Later, to reopen both: `bash ~/Post-Apo-C-plus-plus/tools/open.sh`
+4. Closed Firefox by accident? Click **Post-Apo C++** in the app menu or on the desktop (setup creates it), or run `bash ~/Post-Apo-C-plus-plus/tools/open.sh`. It restarts the search if needed and reopens both pages.
 
 Run scripts as `bash script.sh`, not `./script.sh` (drives are often mounted without execute rights). Keep the drive plugged in: the C++ docs are read from it.
 

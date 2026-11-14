@@ -1,8 +1,22 @@
 (function () {
   "use strict";
+  if (!window.name) window.name = "pac-kit";   // lets the search page link back to this tab
   var $ = function (s, r) { return (r || document).querySelector(s); };
   var $$ = function (s, r) { return Array.prototype.slice.call((r || document).querySelectorAll(s)); };
   var KEY = "pac-";
+
+  /* Deep search: switch to the already open search tab (keeps its query); open it only if missing */
+  $$('a[target="pac-search"]').forEach(function (a) {
+    a.addEventListener("click", function (ev) {
+      if (a.dataset.localOnly && document.documentElement.classList.contains("is-online")) return;
+      ev.preventDefault();
+      var w = window.open("", "pac-search");
+      if (!w) { location.href = a.href; return; }
+      try { if (w.location.href === "about:blank") w.location.href = a.href; }
+      catch (e) { /* the search tab is on another origin: it exists, just focus it */ }
+      w.focus();
+    });
+  });
   var store = {
     get: function (k) { try { return localStorage.getItem(KEY + k); } catch (e) { return null; } },
     set: function (k, v) { try { localStorage.setItem(KEY + k, v); } catch (e) {} },

@@ -53,5 +53,24 @@ EOF
   fi
 fi
 
-[ "$OPEN" = 1 ] || { echo "== Done. Start later with: bash $WORK/tools/open.sh"; exit 0; }
+# launcher: app menu (type "post" in the launcher) + desktop icon, both run tools/open.sh
+ICON="$WORK/firefox/browser/chrome/icons/default/default128.png"
+[ -f "$ICON" ] || ICON="utilities-terminal"
+ENTRY="[Desktop Entry]
+Type=Application
+Name=Post-Apo C++
+Comment=Exam kit and offline search (reopens Firefox and the search server)
+Exec=bash \"$WORK/tools/open.sh\"
+Icon=$ICON
+Terminal=false
+Categories=Development;"
+APPS="$HOME/.local/share/applications"
+mkdir -p "$APPS" && printf '%s\n' "$ENTRY" > "$APPS/post-apo-cpp.desktop"
+DESK="$(xdg-user-dir DESKTOP 2>/dev/null || echo "$HOME/Desktop")"
+if [ -d "$DESK" ]; then
+  printf '%s\n' "$ENTRY" > "$DESK/post-apo-cpp.desktop" && chmod +x "$DESK/post-apo-cpp.desktop"
+fi
+echo "== Launcher: 'Post-Apo C++' in the app menu and on the desktop"
+
+[ "$OPEN" = 1 ] || { echo "== Done. Start later with the launcher or: bash $WORK/tools/open.sh"; exit 0; }
 bash "$WORK/tools/open.sh"

@@ -69,12 +69,12 @@ h1{font-size:15px;margin:0 0 8px;text-transform:uppercase;letter-spacing:.08em}
 .hint{color:var(--muted);font-size:12px;margin-top:20px}
 kbd{border:1px solid var(--muted);padding:0 4px;font-size:11px}
 </style></head><body><div class="wrap">
-<div class="top"><h1><a href="/kit/START_HERE.html" style="color:inherit;text-decoration:none">&larr; Post-Apo C++</a> / deep search</h1>
+<div class="top"><h1><a href="/kit/START_HERE.html" target="pac-kit" style="color:inherit;text-decoration:none">&larr; Post-Apo C++</a> / deep search</h1>
 <input id="q" type="search" autocomplete="off" spellcheck="false" autofocus placeholder="pop_back, erase while iterating, priority_queue min heap ...">
 <div class="chips" id="chips"></div></div>
 <div id="dym"></div><div id="meta"></div><div id="out"></div>
 <p class="hint"><kbd>/</kbd> focus &nbsp; <kbd>&uarr;</kbd><kbd>&darr;</kbd> select &nbsp; <kbd>Enter</kbd> open &nbsp; <a href="/kit/START_HERE.html">START_HERE</a></p>
-</div><script>
+</div><script>window.name="pac-search";
 const SRC=[["all","All"],["kit","Kit"],["fn","Functions"],["cppref","cppreference"],["so","Stack Overflow"]];
 const LABEL={kit:"KIT",fn:"FN",cppref:"REF",so:"SO"};
 const q=document.getElementById("q"),out=document.getElementById("out"),meta=document.getElementById("meta"),dym=document.getElementById("dym"),chips=document.getElementById("chips");
