@@ -115,10 +115,51 @@ _ON_RE = re.compile(r"\son\w+\s*=\s*(\"[^\"]*\"|'[^']*'|[^\s>]+)", re.I)
 _JSURL_RE = re.compile(r"(href|src)\s*=\s*([\"']?)\s*javascript:", re.I)
 
 
+_LOCAL_QIDS = None
+
+
+def _local_qids():
+    """qids of the Stack Overflow questions that are on the drive (cached)."""
+    global _LOCAL_QIDS
+    if _LOCAL_QIDS is None:
+        try:
+            con = engine.connect()
+            _LOCAL_QIDS = {str(r[0]) for r in con.execute("SELECT url_or_path FROM docs WHERE source='so'")}
+            con.close()
+        except Exception:
+            _LOCAL_QIDS = set()
+    return _LOCAL_QIDS
+
+
+_HREF_RE = re.compile(r'<a\s+([^>]*?)href="([^"]*)"([^>]*)>', re.I)
+_SOQ_RE = re.compile(r'^(?:https?:)?(?://(?:www\.)?stackoverflow\.com)?/(?:questions|q)/(\d+)', re.I)
+
+
+def fix_links(s):
+    """Links inside Q&As: a question we have -> local /so/<qid>; everything else -> its real web
+    address, dimmed and marked 'needs internet' (instead of a local 'not found')."""
+    local = _local_qids()
+
+    def repl(m):
+        pre, href, post = m.group(1), m.group(2), m.group(3)
+        q = _SOQ_RE.match(href)
+        if q and q.group(1) in local:
+            return '<a %shref="/so/%s"%s>' % (pre, q.group(1), post)
+        if href.startswith("//"):
+            href = "https:" + href
+        elif href.startswith("/"):
+            href = "https://stackoverflow.com" + href
+        if href.startswith("http"):
+            return ('<a %shref="%s" class="web" title="Not on the drive: needs internet"%s>'
+                    % (pre, href.replace('"', "%22"), post))
+        return m.group(0)
+    return _HREF_RE.sub(repl, s)
+
+
 def clean_html(s):
     s = _SCRIPT_RE.sub("", s or "")
     s = _ON_RE.sub("", s)
-    return _JSURL_RE.sub(r"\1=\2#blocked:", s)
+    return fix_links(_JSURL_RE.sub(r"\1=\2#blocked:", s))
 
 
 def load_so(qid):
@@ -159,6 +200,8 @@ def load_so(qid):
 
 SO_CSS = _CSS + """
 .wrap{max-width:860px;margin:0 auto;padding:16px}
+a.web{opacity:.55;text-decoration-style:dashed}
+a.web::after{content:" \\2197";font-size:.8em}
 .bar a{font-size:13px}
 h1{font-size:24px;line-height:1.2;margin:12px 0 6px}
 .tags span{display:inline-block;border:2px solid var(--ink);padding:0 6px;font-size:12px;margin:0 4px 4px 0;background:var(--surface)}
