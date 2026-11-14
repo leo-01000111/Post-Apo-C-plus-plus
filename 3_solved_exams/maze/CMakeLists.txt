@@ -1,0 +1,31 @@
+cmake_minimum_required (VERSION 3.15)
+project (maze)
+
+set(CMAKE_CXX_STANDARD 17)
+
+find_package(OpenCV REQUIRED)
+find_package(yaml-cpp)
+
+add_definitions(-DDEFAULT_MAZE="${CMAKE_CURRENT_SOURCE_DIR}/mazes/maze.png")
+
+include_directories(${YamlCpp_INCLUDE_DIRS} ${OpenCV_INCLUDE_DIRS} include)
+
+if(OpenCV_FOUND)
+  set(OpenCV_LIBS opencv_highgui)
+endif()
+
+add_library(maze SHARED include/maze.h include/a_star.h
+    include/point.h src/point.cpp)
+target_link_libraries(maze ${OpenCV_LIBS})
+
+#add_executable(generator src/generator.cpp)
+#target_link_libraries(generator maze)
+
+add_executable(line src/solve_line.cpp)
+target_link_libraries(line maze)
+
+add_executable(cell src/solve_cell.cpp)
+target_link_libraries(cell  maze)
+
+add_executable(corridor src/solve_corridor.cpp)
+target_link_libraries(corridor maze)

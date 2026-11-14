@@ -30,7 +30,7 @@ Run scripts as `bash script.sh`, not `./script.sh` (drives are often mounted wit
 | `START_HERE.html` | Self-contained page: 11 sections incl. a syntax reference of 150 std functions, typo-tolerant Ctrl+K search, copy buttons, exam timer, routine checklist. Works offline and online. |
 | `1_cheatsheet/` | Page source: my mistakes, C++17 cheat-sheet, STL quick reference, compiler-error decoder, exam routine (Markdown). |
 | `2_snippets/` | Standalone C++17 files that compile warning-free: backtracking, A* (with the course's `ecn::Astar`), BFS/DFS, minimax with alpha-beta, genetic algorithm, containers, random/timing, recursion, CMake template. Lines to change are marked `ADAPT:`. |
-| `3_solved_exams/` | My solution to the sudoku exam. |
+| `3_solved_exams/` | My solutions to the sudoku and maze (cell, line, corridor) exams. |
 | `tools/` | `setup.sh` (exam PC), `find.sh` (grep everything), `build.sh` (CMake, `Sanitize` mode), `test_snippets.sh`, `fetch_extras.sh`. |
 | `site_src/` | Generator for `START_HERE.html`; `functions.py` is the syntax reference, `python site_src/test_functions.py` compiles all its examples. |
 | `tools/search/` | Offline search engine: SQLite full-text index (BM25) over cppreference, Stack Overflow, the function reference and the kit, with typo correction; local search page on http://127.0.0.1:8090 (Python standard library only). |

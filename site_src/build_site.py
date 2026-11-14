@@ -381,7 +381,22 @@ def page_exams():
         snippet_block("exams", "ex-sudoku-grid", "Sudoku — Grid: constructor, backtracking, bestNextCell",
                       "Backtracking loop and the most-constrained-cell comparator.", base / "src/grid.cpp"),
         snippet_block("exams", "ex-sudoku-cellh", "Sudoku — cell.h (given)", "",
-                      base / "include/sudoku/cell.h")])
+                      base / "include/sudoku/cell.h")]) + maze_exam()
+
+
+def maze_exam():
+    base = ROOT / "3_solved_exams/maze/src"
+    intro = ('<h2 class="sec-h">Maze</h2><p class="lead">Subject: '
+             f'<a href="4_course/subjects/maze_exam.pdf" data-online="{COURSE_REPO}maze/subject/ARPRO_maze.pdf">maze_exam.pdf</a>. '
+             'Done in 2 h 10 min; the corridor print, goal checks and CMake fixes were added afterwards.</p>')
+    return intro + "".join([
+        snippet_block("exams", "ex-maze-cell", "Maze — cell: 4 neighbours",
+                      "<code>maze.isFree</code> on the static member, never <code>Maze()</code>.", base / "solve_cell.cpp"),
+        snippet_block("exams", "ex-maze-line", "Maze — line: slide along straight corridors",
+                      "Distance stored per node; stop on the goal while sliding.", base / "solve_line.cpp"),
+        snippet_block("exams", "ex-maze-corridor", "Maze — corridor: follow corners, print the real path",
+                      "<code>search</code> turns at corners; <code>print</code> walks the corridor again to draw it.",
+                      base / "solve_corridor.cpp")])
 
 
 def page_course():
