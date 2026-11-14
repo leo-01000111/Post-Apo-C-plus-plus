@@ -24,3 +24,6 @@
 - **Comparator for `min_element`:** returns `true` if `c1` is *better*. Rule out invalid items first (`if (c1.digit()) return false; if (c2.digit()) return true;`), then compare.
 - **Bookkeeping line:** `prune` must increment `pruned_count_[guess]` "in any case", otherwise `restore` breaks.
 - **Type vs object (maze exam):** `Maze.isFree(x, y)` does not compile (`expected unqualified-id before '.'`): `Maze` is a class. `Maze().isFree(x, y)` compiles but creates a NEW empty maze, so every cell is a wall and A* finds no path. Use the loaded object: the static member `maze` (`Point::maze`), i.e. `maze.isFree(x, y)`.
+- **Constructor shadowing (maze exam):** `int distance = _distance;` inside a constructor declares a NEW local and leaves the member uninitialised (garbage). Write `distance = _distance;` or better `: Point(_x, _y), distance(_distance) {}`. Give members a default (`int distance = 1;`) so the other constructors don't leave garbage either.
+- **Unnamed parameters (maze exam):** `bool is_corridor(int, int) const` that uses `x`, `y` in its body silently tests the member coordinates, not the arguments. Name them (`int cx, int cy`) and use them.
+- **Sliding along a corridor (maze line/corridor):** stop on the goal too, or you jump past it: `while (is_corridor(cx, cy) && !(cx == goal.x && cy == goal.y))`. Keep the distance positive (`abs`).
