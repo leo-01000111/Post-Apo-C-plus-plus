@@ -142,7 +142,7 @@ def search(q, src="all", n=30, prefix=True, con=None):
     try:
         out = _search(q, src, n, prefix, con)
         sug = out.get("suggest")
-        if out.pop("_used_or", False) or len(out["results"]) < 3:
+        if out.pop("_used_or", False) or not out["results"]:   # exact hits, even few, win
             if sug and sug.lower() != q.lower():
                 fixed = _search(sug, src, n, prefix, con)
                 if fixed["results"] and not fixed.pop("_used_or", False):
@@ -179,6 +179,8 @@ def _search(q, src, n, prefix, con):
                 name = title.split(" (")[0].lower()
                 if name == ql or name == qn:
                     mult *= 25
+                elif qn.split(" ")[0] == name or ql.split(" ")[0] == name:
+                    mult *= 6   # query starts with the function's name: "accumulate double"
             elif r["source"] == "cppref":
                 if title.lower() == qn or _leaf(title) == ql:
                     mult *= 3
@@ -242,6 +244,9 @@ def cli(argv):
         print("      " + loc)
         if sn:
             print("      " + sn)
+    if out.get("corrected_from"):
+        print()
+        print("Showing results for: " + out["q"] + "   (typed: " + out["corrected_from"] + ")")
     if out["suggest"]:
         print("\nDid you mean: " + out["suggest"])
     return 0

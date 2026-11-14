@@ -64,3 +64,18 @@ New .cpp file added? Re-run `cmake ..` (and check it is in add_executable / the 
 - [ ] Broken/unfinished code is commented out, not left half-written.
 - [ ] `git add -A && git commit -qm final`.
 - [ ] No debug prints flooding the output; no `waitKey(0)` surprises left unexplained.
+
+## Start of exam (commands)
+
+```bash
+# once per PC: git needs a name
+git config --global user.name exam
+git config --global user.email exam@local
+# in the exam folder (with CMakeLists.txt)
+ideconf
+qtcreator CMakeLists.txt &
+echo 'build*/' > .gitignore
+git init -q && git add -A && git commit -qm start
+# crash -> exact line (own build-sanitize/)
+bash ~/Post-Apo-C-plus-plus/tools/build.sh . Sanitize
+```
