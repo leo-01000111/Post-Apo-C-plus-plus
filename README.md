@@ -18,8 +18,8 @@ Copy the `Post-Apo-C-plus-plus` folder to the root of a USB drive (FAT32 or exFA
 
 1. Plug in the drive and open it in the file manager (Dolphin).
 2. Go into `Post-Apo-C-plus-plus` and press **Shift+F4** ("Open Terminal Here").
-3. Run `bash tools/setup.sh`. It copies the kit to `~/Post-Apo-C-plus-plus` (local disk, faster) and links the offline C++ docs from the drive.
-4. `cd ~/Post-Apo-C-plus-plus && xdg-open START_HERE.html`
+3. Run `bash tools/setup.sh`. It copies the kit to `~/Post-Apo-C-plus-plus`, unpacks the portable Firefox there (no admin rights needed), starts the search server and opens the kit and the search page.
+4. Later, to reopen both: `bash ~/Post-Apo-C-plus-plus/tools/open.sh`
 
 Run scripts as `bash script.sh`, not `./script.sh` (drives are often mounted without execute rights). Keep the drive plugged in: the C++ docs are read from it.
 
@@ -33,12 +33,16 @@ Run scripts as `bash script.sh`, not `./script.sh` (drives are often mounted wit
 | `3_solved_exams/` | My solution to the sudoku exam. |
 | `tools/` | `setup.sh` (exam PC), `find.sh` (grep everything), `build.sh` (CMake, `Sanitize` mode), `test_snippets.sh`, `fetch_extras.sh`. |
 | `site_src/` | Generator for `START_HERE.html`; `functions.py` is the syntax reference, `python site_src/test_functions.py` compiles all its examples. |
+| `tools/search/` | Offline search engine: SQLite full-text index (BM25) over cppreference, Stack Overflow, the function reference and the kit, with typo correction; local search page on http://127.0.0.1:8090 (Python standard library only). |
 | `4_course/`, `5_repo/`, `6_reference/` | Not in the repo (third-party). Created by `fetch_extras.sh`. |
+| `7_stackoverflow/`, `8_search/`, `9_browser/` | Not in the repo. Top 5,000 Stack Overflow [c++] Q&As (CC BY-SA, see `7_stackoverflow/ATTRIBUTION.md`), the built index, portable Firefox ESR. Created by `fetch_extras.sh`. |
 
 ## Terminal tools
 
 ```bash
-bash tools/find.sh priority_queue          # search cheat-sheets, snippets, exams, slide text, course repo
+bash tools/search.sh "erase while iterating" # ranked search: cppreference, Stack Overflow, functions, kit
+bash tools/search.sh                        # same, as a page in the browser
+bash tools/find.sh priority_queue          # grep cheat-sheets, snippets, exams, slide text, course repo
 bash tools/find.sh -C 3 "erase.*remove"     # regex, with context
 bash tools/build.sh path/to/project Sanitize   # crash -> exact line (AddressSanitizer + UBSan)
 bash tools/test_snippets.sh                 # compile and run every snippet

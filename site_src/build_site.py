@@ -219,7 +219,8 @@ def page_home():
   <div>
     <h1>{SHORT}</h1>
     <div class="row">{btn("Search everything", variant="primary", deg=0, size="lg", attrs=" data-open-palette")}
-      {btn("Which algorithm", "#algo", "secondary", 0, size="lg")}</div>
+      {btn("Which algorithm", "#algo", "secondary", 0, size="lg")}
+      {btn("Deep search", "http://127.0.0.1:8090/", "ghost", 315, size="lg", attrs=' data-online="" data-local-only="1" title="cppreference + Stack Overflow + kit (start it with bash tools/open.sh)"')}</div>
     <div class="quick" id="home-links" aria-label="Quick open"><span class="label">Open</span>{links}</div>
   </div>
   <div class="hero-minor">

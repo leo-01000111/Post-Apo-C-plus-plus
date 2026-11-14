@@ -10,3 +10,8 @@ __pycache__/
 
 # course subject inside the solved exam (third-party, kept on the drive only)
 3_solved_exams/*/subject/
+
+# drive-only data: Stack Overflow content, built search index, portable browser
+7_stackoverflow/
+8_search/
+9_browser/
